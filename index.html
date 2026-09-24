@@ -3,49 +3,94 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Pedido de recetas - CEOT</title>
+<title>Pedidos - CEOT</title>
 </head>
 <body style="margin:0;padding:16px;background:#f7f2e7;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif">
-<div id="ceot-receta" style="max-width:520px;margin:0 auto;font-size:15px;line-height:1.5;color:#1f2a24">
+<div id="ceot" style="max-width:520px;margin:0 auto;font-size:15px;line-height:1.5;color:#1f2a24">
 <style>
-#ceot-receta *{box-sizing:border-box}
-#ceot-receta .card{background:#fff;border:1px solid #d9d2bd;border-radius:12px;padding:20px}
-#ceot-receta h2{margin:0 0 4px;font-size:20px;font-weight:600;color:#20402f}
-#ceot-receta .sub{margin:0 0 14px;color:#5b6b61;font-size:14px}
-#ceot-receta ol{margin:0 0 14px;padding-left:20px;font-size:14px;color:#3d4a42}
-#ceot-receta label{display:block;margin:12px 0 4px;font-size:13px;color:#3d4a42}
-#ceot-receta select{width:100%;padding:10px 11px;border:1px solid #c9c2ab;border-radius:8px;font:inherit;background:#fff;color:#1f2a24}
-#ceot-receta .aviso{background:#fbf3dc;border:1px solid #e6d28f;color:#5c4a12;border-radius:8px;padding:10px 12px;font-size:13px;margin:0 0 12px}
-#ceot-receta .chk{display:flex;gap:8px;align-items:flex-start;margin-top:14px;font-size:14px}
-#ceot-receta .chk input{margin-top:4px}
-#ceot-receta .err{color:#a32d2d;font-size:13px;margin:6px 0 0;min-height:18px}
-#ceot-receta button{margin-top:6px;width:100%;padding:12px;border:0;border-radius:8px;background:#20402f;color:#fff;font:inherit;font-weight:600;cursor:pointer}
-#ceot-receta button:hover{background:#2c5a42}
-#ceot-receta .wa{display:block;margin-top:14px;text-align:center;font-size:14px;color:#20402f}
-#ceot-receta .fine{margin:12px 0 0;font-size:12px;color:#6b7a70}
+#ceot *{box-sizing:border-box}
+#ceot .card{background:#fff;border:1px solid #d9d2bd;border-radius:12px;padding:20px}
+#ceot h2{margin:0 0 4px;font-size:20px;font-weight:600;color:#20402f}
+#ceot .sub{margin:0 0 14px;color:#5b6b61;font-size:14px}
+#ceot label{display:block;margin:12px 0 4px;font-size:13px;color:#3d4a42}
+#ceot input[type=text],#ceot input[type=tel],#ceot select,#ceot textarea{width:100%;padding:10px 11px;border:1px solid #c9c2ab;border-radius:8px;font:inherit;background:#fff;color:#1f2a24}
+#ceot input:focus,#ceot select:focus,#ceot textarea:focus{outline:2px solid #20402f}
+#ceot .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:440px){#ceot .row{grid-template-columns:1fr}}
+#ceot .aviso{background:#fbf3dc;border:1px solid #e6d28f;color:#5c4a12;border-radius:8px;padding:10px 12px;font-size:13px;margin:0 0 6px}
+#ceot .pasos{margin:0 0 6px;padding-left:20px;font-size:14px;color:#3d4a42}
+#ceot .chk{display:flex;gap:8px;align-items:flex-start;margin-top:14px;font-size:14px}
+#ceot .chk input{margin-top:4px}
+#ceot .err{color:#a32d2d;font-size:13px;margin:6px 0 0;min-height:18px}
+#ceot button.go{margin-top:6px;width:100%;padding:12px;border:0;border-radius:8px;background:#20402f;color:#fff;font:inherit;font-weight:600;cursor:pointer}
+#ceot button.go:hover{background:#2c5a42}
+#ceot .wa{display:block;margin-top:14px;text-align:center;font-size:14px;color:#20402f}
+#ceot .fine{margin:12px 0 0;font-size:12px;color:#6b7a70}
+#ceot .ok{display:none;margin-top:12px;padding:12px;border-radius:8px;background:#e6f2ea;border:1px solid #b9d9c4;font-size:14px}
+#ceot .ok a{color:#20402f;font-weight:600}
+#ceot .sec{display:none}
 </style>
 <div class="card">
-<h2>Pedido de receta</h2>
-<p class="sub">Elegí a tu profesional y completás el pedido en el formulario oficial de RCTA.</p>
-<ol>
+<h2>Pedidos a tu profesional</h2>
+<p class="sub">Elegí qué necesitás y completá los datos.</p>
+<p class="aviso"><strong>Urgencias:</strong> no las pidas por acá. Comunicate con la guardia. Este formulario es solo para renovar recetas o pedir órdenes o certificados ya indicados por tu profesional.</p>
+<label for="tipo">¿Qué necesitás?</label>
+<select id="tipo"><option value="">Elegí una opción</option><option value="receta">Receta de un medicamento</option><option value="orden">Orden de estudio ya indicada en consulta</option><option value="cert">Certificado</option></select>
+
+<form id="f-receta" class="sec" novalidate>
+<ol class="pasos">
 <li>Elegí quién te atiende.</li>
-<li>Completá tus datos y el medicamento. Tené a mano tu <strong>plan y número de afiliado</strong> de la obra social: son obligatorios.</li>
+<li>Completá tus datos y el medicamento en el formulario de RCTA. Tené a mano tu <strong>plan y número de afiliado</strong>: son obligatorios.</li>
 <li>El profesional revisa el pedido y prepara tu receta. Te avisan por mail.</li>
 </ol>
-<p class="aviso"><strong>Urgencias:</strong> no las pidas por acá. Comunicate con la guardia. Este formulario es solo para renovar un tratamiento que ya te indicó tu médico.</p>
-<form id="cr-form" novalidate>
-<label for="cr-prof">Profesional que te atiende</label>
-<select id="cr-prof"><option value="">Elegí una opción</option></select>
-<label class="chk"><input type="checkbox" id="cr-ok"><span>Confirmo que es la renovación de un tratamiento que ya me indicó el profesional y que no es una urgencia.</span></label>
-<p class="err" id="cr-err" role="alert"></p>
-<button type="submit">Ir al formulario de pedido</button>
+<label for="r-prof">Profesional que te atiende</label>
+<select id="r-prof"><option value="">Elegí una opción</option></select>
+<label class="chk"><input type="checkbox" id="r-ok"><span>Confirmo que es la renovación de un tratamiento que ya me indicó el profesional y que no es una urgencia.</span></label>
+<p class="err" id="r-err" role="alert"></p>
+<button class="go" type="submit">Ir al formulario de receta</button>
 </form>
-<a class="wa" id="cr-wa" href="#" target="_blank" rel="noopener">¿Dudas? Escribinos por WhatsApp</a>
-<p class="fine">El pedido se completa en RCTA. Los datos que cargues los ve solo el profesional elegido, quien revisa cada pedido antes de emitir la receta.</p>
+
+<form id="f-wa" class="sec" novalidate>
+<p class="sub" id="wa-sub"></p>
+<label for="w-nom">Nombre y apellido</label>
+<input type="text" id="w-nom" autocomplete="name">
+<div class="row">
+<div><label for="w-dni">DNI</label><input type="tel" id="w-dni" inputmode="numeric"></div>
+<div><label for="w-tel">Teléfono (opcional)</label><input type="tel" id="w-tel"></div>
+</div>
+<div class="row">
+<div><label for="w-os">Obra social o prepaga</label><input type="text" id="w-os"></div>
+<div><label for="w-plan">Plan</label><input type="text" id="w-plan"></div>
+</div>
+<label for="w-afi">N° de afiliado</label>
+<input type="text" id="w-afi">
+<label for="w-prof">Profesional que te atiende</label>
+<select id="w-prof"><option value="">Elegí una opción</option></select>
+<div id="w-orden" class="sec">
+<label for="w-est">Estudio u orden que te indicaron</label>
+<textarea id="w-est" rows="3" placeholder="Por ejemplo: resonancia de rodilla derecha"></textarea>
+<label for="w-fec">Fecha aproximada de la consulta</label>
+<input type="text" id="w-fec" placeholder="Septiembre 2026">
+</div>
+<div id="w-cert" class="sec">
+<label for="w-tipoc">Tipo de certificado</label>
+<input type="text" id="w-tipoc" placeholder="Por ejemplo: certificado de reposo o de aptitud">
+<label for="w-mot">Para qué lo necesitás</label>
+<textarea id="w-mot" rows="3"></textarea>
+</div>
+<label class="chk"><input type="checkbox" id="w-ok"><span id="w-oktxt"></span></label>
+<p class="err" id="w-err" role="alert"></p>
+<button class="go" type="submit">Enviar pedido por WhatsApp</button>
+<div class="ok" id="w-okbox">Si WhatsApp no se abrió solo, <a id="w-link" href="#" target="_blank" rel="noopener">tocá acá para abrirlo</a>.</div>
+</form>
+
+<a class="wa" id="wa-dudas" href="#" target="_blank" rel="noopener">¿Dudas? Escribinos por WhatsApp</a>
+<p class="fine">Tus datos se usan solo para tu pedido. El profesional revisa cada pedido antes de emitir la receta, la orden o el certificado.</p>
 </div>
 <script>
 (function(){
-var WA_NUM="5492235823068";
+var WA_DUDAS="5492235823068";
+var WA_PEDIDOS="5492235823068";
 var PROFESIONALES=[
 {nombre:"Dr. Maximiliano Bruni",url:"https://app.rcta.me/p/maximiliano-bruni"},
 {nombre:"Dr. Daniel Corelich",url:"https://app.rcta.me/p/daniel-corelich"},
@@ -57,16 +102,38 @@ var PROFESIONALES=[
 {nombre:"Dr. Maximiliano Mazzola",url:"https://app.rcta.me/p/maximiliano-tomas-mazzola"}
 ];
 var $=function(i){return document.getElementById(i)};
-var sel=$("cr-prof");
-PROFESIONALES.forEach(function(p,i){var o=document.createElement("option");o.value=i;o.textContent=p.nombre;sel.appendChild(o)});
-$("cr-wa").href="https://wa.me/"+WA_NUM+"?text="+encodeURIComponent("Hola, tengo una consulta sobre un pedido de receta.");
-$("cr-form").addEventListener("submit",function(e){
-e.preventDefault();
-var err=$("cr-err");
-if(sel.value===""){err.textContent="Elegí a tu profesional.";return}
-if(!$("cr-ok").checked){err.textContent="Confirmá que es una renovación y no una urgencia.";return}
+["r-prof","w-prof"].forEach(function(id){PROFESIONALES.forEach(function(p,i){var o=document.createElement("option");o.value=i;o.textContent=p.nombre;$(id).appendChild(o)})});
+$("wa-dudas").href="https://wa.me/"+WA_DUDAS+"?text="+encodeURIComponent("Hola, tengo una consulta sobre un pedido.");
+function show(){
+var t=$("tipo").value;
+$("f-receta").style.display=t==="receta"?"block":"none";
+$("f-wa").style.display=(t==="orden"||t==="cert")?"block":"none";
+$("w-orden").style.display=t==="orden"?"block":"none";
+$("w-cert").style.display=t==="cert"?"block":"none";
+$("wa-sub").textContent=t==="orden"?"Solo para una orden que tu profesional ya te indicó en la consulta y te faltó pedir.":"Completá los datos; tu profesional evalúa si corresponde emitirlo.";
+$("w-oktxt").textContent=t==="orden"?"Confirmo que mi profesional me indicó este estudio en la consulta y que no es una urgencia.":"Confirmo que no es una urgencia y que entiendo que el profesional decide si corresponde emitirlo.";
+}
+$("tipo").addEventListener("change",show);show();
+$("f-receta").addEventListener("submit",function(e){
+e.preventDefault();var err=$("r-err");
+if($("r-prof").value===""){err.textContent="Elegí a tu profesional.";return}
+if(!$("r-ok").checked){err.textContent="Confirmá que es una renovación y no una urgencia.";return}
+err.textContent="";window.open(PROFESIONALES[+$("r-prof").value].url,"_blank","noopener");
+});
+$("f-wa").addEventListener("submit",function(e){
+e.preventDefault();var err=$("w-err"),t=$("tipo").value;
+var v={n:$("w-nom").value.trim(),d:$("w-dni").value.replace(/\D/g,""),t:$("w-tel").value.trim(),o:$("w-os").value.trim(),pl:$("w-plan").value.trim(),a:$("w-afi").value.trim(),p:$("w-prof").value};
+if(!v.n||!v.d||!v.o||!v.pl||!v.a||v.p===""){err.textContent="Completá nombre, DNI, obra social, plan, afiliado y profesional.";return}
+if(v.d.length<7||v.d.length>9){err.textContent="Revisá el DNI: tiene que tener entre 7 y 9 números.";return}
+var extra="";
+if(t==="orden"){var est=$("w-est").value.trim(),fec=$("w-fec").value.trim();if(!est||!fec){err.textContent="Contanos qué estudio te indicaron y cuándo fue la consulta.";return}extra="Pedido: ORDEN DE ESTUDIO ya indicada en consulta\nEstudio: "+est+"\nFecha de la consulta: "+fec}
+else{var tc=$("w-tipoc").value.trim(),mo=$("w-mot").value.trim();if(!tc||!mo){err.textContent="Completá el tipo de certificado y para qué lo necesitás.";return}extra="Pedido: CERTIFICADO\nTipo: "+tc+"\nMotivo: "+mo}
+if(!$("w-ok").checked){err.textContent="Tildá la confirmación para continuar.";return}
 err.textContent="";
-window.open(PROFESIONALES[+sel.value].url,"_blank","noopener");
+var msg="Hola, quiero hacer un pedido.\n\n"+extra+"\nProfesional: "+PROFESIONALES[+v.p].nombre+"\n\nNombre: "+v.n+"\nDNI: "+v.d+(v.t?"\nTeléfono: "+v.t:"")+"\nObra social: "+v.o+" - Plan "+v.pl+" - Afiliado "+v.a;
+var url="https://wa.me/"+WA_PEDIDOS+"?text="+encodeURIComponent(msg);
+$("w-link").href=url;$("w-okbox").style.display="block";
+try{window.open(url,"_blank","noopener")}catch(x){}
 });
 })();
 </script>
