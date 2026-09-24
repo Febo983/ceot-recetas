@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pedido de recetas - CEOT</title>
+</head>
+<body style="margin:0;padding:16px;background:#f7f2e7;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif">
+<div id="ceot-receta" style="max-width:520px;margin:0 auto;font-size:15px;line-height:1.5;color:#1f2a24">
+<style>
+#ceot-receta *{box-sizing:border-box}
+#ceot-receta .card{background:#fff;border:1px solid #d9d2bd;border-radius:12px;padding:20px}
+#ceot-receta h2{margin:0 0 4px;font-size:20px;font-weight:600;color:#20402f}
+#ceot-receta .sub{margin:0 0 14px;color:#5b6b61;font-size:14px}
+#ceot-receta ol{margin:0 0 14px;padding-left:20px;font-size:14px;color:#3d4a42}
+#ceot-receta label{display:block;margin:12px 0 4px;font-size:13px;color:#3d4a42}
+#ceot-receta select{width:100%;padding:10px 11px;border:1px solid #c9c2ab;border-radius:8px;font:inherit;background:#fff;color:#1f2a24}
+#ceot-receta .aviso{background:#fbf3dc;border:1px solid #e6d28f;color:#5c4a12;border-radius:8px;padding:10px 12px;font-size:13px;margin:0 0 12px}
+#ceot-receta .chk{display:flex;gap:8px;align-items:flex-start;margin-top:14px;font-size:14px}
+#ceot-receta .chk input{margin-top:4px}
+#ceot-receta .err{color:#a32d2d;font-size:13px;margin:6px 0 0;min-height:18px}
+#ceot-receta button{margin-top:6px;width:100%;padding:12px;border:0;border-radius:8px;background:#20402f;color:#fff;font:inherit;font-weight:600;cursor:pointer}
+#ceot-receta button:hover{background:#2c5a42}
+#ceot-receta .wa{display:block;margin-top:14px;text-align:center;font-size:14px;color:#20402f}
+#ceot-receta .fine{margin:12px 0 0;font-size:12px;color:#6b7a70}
+</style>
+<div class="card">
+<h2>Pedido de receta</h2>
+<p class="sub">Elegí a tu profesional y completás el pedido en el formulario oficial de RCTA.</p>
+<ol>
+<li>Elegí quién te atiende.</li>
+<li>Completá tus datos y el medicamento.</li>
+<li>El profesional revisa el pedido y prepara tu receta. Te avisan por mail.</li>
+</ol>
+<p class="aviso"><strong>Urgencias:</strong> no las pidas por acá. Comunicate con la guardia. Este formulario es solo para renovar un tratamiento que ya te indicó tu médico.</p>
+<form id="cr-form" novalidate>
+<label for="cr-prof">Profesional que te atiende</label>
+<select id="cr-prof"><option value="">Elegí una opción</option></select>
+<label class="chk"><input type="checkbox" id="cr-ok"><span>Confirmo que es la renovación de un tratamiento que ya me indicó el profesional y que no es una urgencia.</span></label>
+<p class="err" id="cr-err" role="alert"></p>
+<button type="submit">Ir al formulario de pedido</button>
+</form>
+<a class="wa" id="cr-wa" href="#" target="_blank" rel="noopener">¿Dudas? Escribinos por WhatsApp</a>
+<p class="fine">El pedido se completa en RCTA. Los datos que cargues los ve solo el profesional elegido, quien revisa cada pedido antes de emitir la receta.</p>
+</div>
+<script>
+(function(){
+var WA_NUM="5492235823068";
+var PROFESIONALES=[
+{nombre:"Dr. Maximiliano Bruni",url:"https://app.rcta.me/p/maximiliano-bruni"},
+{nombre:"Dr. Daniel Corelich",url:"https://app.rcta.me/p/daniel-corelich"},
+{nombre:"Dr. Cristian Deganutti",url:"https://app.rcta.me/p/cristian-deganutti"},
+{nombre:"Dr. Amilcar Trivellini",url:"https://app.rcta.me/p/amilcar-trivellini"},
+{nombre:"Dr. Juan Pablo de la Colina",url:"https://app.rcta.me/p/juan-pablo-de-la-colina"},
+{nombre:"Dr. Camilo Perlasco",url:"https://app.rcta.me/p/camilo-perlasco"},
+{nombre:"Dr. Daniel Labayén",url:"https://app.rcta.me/p/daniel-labayen"},
+{nombre:"Dr. Maximiliano Mazzola",url:"https://app.rcta.me/p/maximiliano-tomas-mazzola"}
+];
+var $=function(i){return document.getElementById(i)};
+var sel=$("cr-prof");
+PROFESIONALES.forEach(function(p,i){var o=document.createElement("option");o.value=i;o.textContent=p.nombre;sel.appendChild(o)});
+$("cr-wa").href="https://wa.me/"+WA_NUM+"?text="+encodeURIComponent("Hola, tengo una consulta sobre un pedido de receta.");
+$("cr-form").addEventListener("submit",function(e){
+e.preventDefault();
+var err=$("cr-err");
+if(sel.value===""){err.textContent="Elegí a tu profesional.";return}
+if(!$("cr-ok").checked){err.textContent="Confirmá que es una renovación y no una urgencia.";return}
+err.textContent="";
+window.open(PROFESIONALES[+sel.value].url,"_blank","noopener");
+});
+})();
+</script>
+</div>
+</body>
+</html>
