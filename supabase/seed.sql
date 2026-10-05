@@ -1,24 +1,29 @@
 -- ---------------------------------------------------------------------------
 -- Carga inicial de usuarios con un PIN aleatorio de 6 digitos.
 --
--- ANTES DE CORRER: completa en la lista de abajo los profesionales que falten.
--- Despues corre esto UNA vez en el SQL editor de Supabase y guarda la tabla que
+-- Corre esto UNA vez en el SQL editor de Supabase y guarda la tabla que
 -- devuelve: los PIN se guardan hasheados y despues no se pueden recuperar.
 --
--- Para cambiar un PIN:  select vc_set_pin('Dr. Daniel Corelich', '482910');
+-- Para cambiar un PIN:     select vc_set_pin('Dr. Daniel Corelich', '482910');
+-- Para corregir un nombre:  update vc_usuarios set nombre = 'Dr. Nombre Fisser'
+--                             where nombre = 'Dr. Fisser';
 -- ---------------------------------------------------------------------------
 with gente (nombre, rol) as (
   values
     ('Dr. Maximiliano Bruni',        'profesional'),
     ('Dr. Daniel Corelich',          'profesional'),
     ('Dr. Cristian Deganutti',       'profesional'),
-    ('Dr. Amilcar Trivellini',       'profesional'),
     ('Dr. Juan Pablo de la Colina',  'profesional'),
-    ('Dr. Camilo Perlasco',          'profesional'),
     ('Dr. Daniel Labayén',           'profesional'),
     ('Dr. Maximiliano Mazzola',      'profesional'),
-    -- >>> faltan 5 profesionales: agregalos aca, con el mismo formato <<<
-    -- ('Dr. Nombre Apellido',       'profesional'),
+    ('Dr. Camilo Perlasco',          'profesional'),
+    ('Dr. Amilcar Trivellini',       'profesional'),
+    -- Falta el nombre de pila de estos cinco (y confirmar Dr. / Dra.):
+    ('Dr. Fisser',                   'profesional'),
+    ('Dr. Garmendia',                'profesional'),
+    ('Dr. Guilera',                  'profesional'),
+    ('Dr. León',                     'profesional'),
+    ('Dr. Soulé',                    'profesional'),
     ('Secretaría 14',                'secretaria'),
     ('Secretaría 11',                'secretaria')
 ),

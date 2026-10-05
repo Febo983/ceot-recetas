@@ -18,8 +18,8 @@ que hacerlo **desde la cuenta `traumatologiaccolon@gmail.com`**.
    (o creá uno nuevo, región **South America (São Paulo)**).
 2. Andá a **SQL Editor** → **New query**, pegá todo el contenido de
    `supabase/migrations/20261005120000_videoconsulta.sql` y dale **Run**.
-3. Abrí `supabase/seed.sql`, **completá los profesionales que falten** en la
-   lista del principio, pegalo en una query nueva y **Run**. Devuelve una tabla con el
+3. Nueva query, pegá `supabase/seed.sql` y **Run**. Carga los 13 profesionales
+   y las dos secretarías. Devuelve una tabla con el
    **PIN de cada profesional y secretaria**: copiala y guardala ahora, los PIN
    quedan hasheados y después no se pueden recuperar.
    - Para cambiar un PIN: `select vc_set_pin('Dr. Daniel Corelich', '482910');`
