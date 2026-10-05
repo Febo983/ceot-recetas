@@ -18,7 +18,8 @@ que hacerlo **desde la cuenta `traumatologiaccolon@gmail.com`**.
    (o creá uno nuevo, región **South America (São Paulo)**).
 2. Andá a **SQL Editor** → **New query**, pegá todo el contenido de
    `supabase/migrations/20261005120000_videoconsulta.sql` y dale **Run**.
-3. Nueva query, pegá `supabase/seed.sql` y **Run**. Devuelve una tabla con el
+3. Abrí `supabase/seed.sql`, **completá los profesionales que falten** en la
+   lista del principio, pegalo en una query nueva y **Run**. Devuelve una tabla con el
    **PIN de cada profesional y secretaria**: copiala y guardala ahora, los PIN
    quedan hasheados y después no se pueden recuperar.
    - Para cambiar un PIN: `select vc_set_pin('Dr. Daniel Corelich', '482910');`
@@ -103,8 +104,7 @@ Después editá `videoconsulta/config.js` con los datos del paso 1:
 ```js
 window.VC_CONFIG = {
   FN_URL: "https://xxxx.supabase.co/functions/v1/videoconsulta",
-  ANON_KEY: "eyJ...",
-  WA_SECRETARIA: "5492235823068"
+  ANON_KEY: "eyJ..."
 };
 ```
 
@@ -141,8 +141,9 @@ Repartí los PIN uno por uno (no en un grupo). Son personales.
 2. Abre `…/videoconsulta/`, entra con su PIN.
 3. Elige día, hora de inicio y de fin. Alias y monto vienen precargados, los
    puede cambiar en esa consulta.
-4. **Crear videoconsulta** → aparece el link. Toca **Enviar a la secretaria**
-   (se abre WhatsApp con el mensaje armado) o **Copiar link**.
+4. **Crear videoconsulta** → aparece el link. Toca **Pasar por WhatsApp**
+   (se abre WhatsApp con el mensaje ya armado y elige a la secretaria de su
+   agenda) o **Copiar link**.
 
 **Secretaria**
 1. Recibe el link del profesional.

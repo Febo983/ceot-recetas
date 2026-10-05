@@ -1,8 +1,11 @@
 -- ---------------------------------------------------------------------------
 -- Carga inicial de usuarios con un PIN aleatorio de 6 digitos.
--- Corre esto UNA vez en el SQL editor de Supabase y guarda la tabla que
+--
+-- ANTES DE CORRER: completa en la lista de abajo los profesionales que falten.
+-- Despues corre esto UNA vez en el SQL editor de Supabase y guarda la tabla que
 -- devuelve: los PIN se guardan hasheados y despues no se pueden recuperar.
--- Para cambiar uno: select vc_set_pin('Dr. Daniel Corelich', '482910');
+--
+-- Para cambiar un PIN:  select vc_set_pin('Dr. Daniel Corelich', '482910');
 -- ---------------------------------------------------------------------------
 with gente (nombre, rol) as (
   values
@@ -12,10 +15,12 @@ with gente (nombre, rol) as (
     ('Dr. Amilcar Trivellini',       'profesional'),
     ('Dr. Juan Pablo de la Colina',  'profesional'),
     ('Dr. Camilo Perlasco',          'profesional'),
-    ('Dr. Daniel Labayen',           'profesional'),
+    ('Dr. Daniel Labayén',           'profesional'),
     ('Dr. Maximiliano Mazzola',      'profesional'),
-    ('Secretaria 1',                 'secretaria'),
-    ('Secretaria 2',                 'secretaria')
+    -- >>> faltan 5 profesionales: agregalos aca, con el mismo formato <<<
+    -- ('Dr. Nombre Apellido',       'profesional'),
+    ('Secretaría 14',                'secretaria'),
+    ('Secretaría 11',                'secretaria')
 ),
 con_pin as (
   select nombre,
@@ -38,8 +43,11 @@ select nombre,
   from con_pin
  order by rol, nombre;
 
--- Chequeo: ningun PIN quedo repetido entre dos usuarios.
--- (si devuelve filas, cambia uno con vc_set_pin)
--- select a.nombre, b.nombre
---   from vc_usuarios a join vc_usuarios b
---     on a.id < b.id and b.pin_hash = crypt('<pin de a>', b.pin_hash);
+-- ---------------------------------------------------------------------------
+-- Alta de alguien nuevo mas adelante (elegi vos el PIN, 6 digitos):
+--   insert into vc_usuarios (nombre, rol, pin_hash)
+--   values ('Dra. Nombre Apellido', 'profesional', crypt('123456', gen_salt('bf', 10)));
+--
+-- Baja (no borra sus videoconsultas, solo le saca el acceso):
+--   update vc_usuarios set activo = false where nombre = 'Dr. Nombre Apellido';
+-- ---------------------------------------------------------------------------

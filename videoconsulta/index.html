@@ -115,7 +115,7 @@ details[open] summary{margin-bottom:14px}
         <a class="url" id="rUrl" href="#" target="_blank" rel="noopener"></a>
         <div class="acc">
           <button class="sec" id="rCopiar">Copiar link</button>
-          <button id="rWa">Enviar a la secretaria</button>
+          <button id="rWa">Pasar por WhatsApp</button>
         </div>
       </div>
       <p class="fine">El Meet se crea en el calendario de la clínica. El link ya incluye el horario, tu alias y el monto.</p>
@@ -229,8 +229,10 @@ details[open] summary{margin-bottom:14px}
       "Link para el paciente: " + c.link;
   }
 
-  function wa(numero, texto) {
-    window.open("https://wa.me/" + numero + "?text=" + encodeURIComponent(texto), "_blank", "noopener");
+  // Sin numero fijo: WhatsApp abre el selector de contactos y cada uno elige
+  // a quien mandarselo.
+  function wa(texto) {
+    window.open("https://wa.me/?text=" + encodeURIComponent(texto), "_blank", "noopener");
   }
 
   // ---------- ingreso ----------
@@ -344,7 +346,7 @@ details[open] summary{margin-bottom:14px}
     $("rUrl").href = c.link;
     $("rUrl").textContent = c.link;
     $("rCopiar").onclick = function () { copiar(c.link, $("rCopiar")); };
-    $("rWa").onclick = function () { wa(CFG.WA_SECRETARIA, textoWa(c)); };
+    $("rWa").onclick = function () { wa(textoWa(c)); };
     aviso($("appMsg"), "Videoconsulta creada para el " + fmtFecha(c.fecha) + " a las " + c.hora_inicio + " hs.", "ok");
     box.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }
@@ -410,11 +412,8 @@ details[open] summary{margin-bottom:14px}
 
         var bWa = document.createElement("button");
         bWa.className = "sec";
-        bWa.textContent = yo.rol === "secretaria" ? "Pasar por WhatsApp" : "Enviar a la secretaria";
-        bWa.onclick = function () {
-          if (yo.rol === "secretaria") wa("", textoWa(c));
-          else wa(CFG.WA_SECRETARIA, textoWa(c));
-        };
+        bWa.textContent = "Pasar por WhatsApp";
+        bWa.onclick = function () { wa(textoWa(c)); };
         acc.appendChild(bWa);
 
         if (yo.rol === "profesional") {

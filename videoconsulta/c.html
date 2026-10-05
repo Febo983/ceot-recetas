@@ -35,8 +35,8 @@ ol li{margin-bottom:6px}
     <div id="cargando" class="estado">Abriendo tu videoconsulta…</div>
 
     <div id="error" class="hidden estado">
-      <p id="errorTxt" style="margin:0 0 10px"></p>
-      <a class="wa" id="waError" href="#" target="_blank" rel="noopener">Escribinos por WhatsApp</a>
+      <p id="errorTxt" style="margin:0 0 6px"></p>
+      <p style="margin:0;font-size:14px">Escribile a la secretaría de la clínica.</p>
     </div>
 
     <div id="detalle" class="hidden">
@@ -73,10 +73,7 @@ ol li{margin-bottom:6px}
 (function () {
   "use strict";
   var CFG = window.VC_CONFIG || {};
-  var WA = CFG.WA_SECRETARIA || "";
   var $ = function (id) { return document.getElementById(id); };
-
-  $("waError").href = "https://wa.me/" + WA + "?text=" + encodeURIComponent("Hola, tengo un problema con el link de mi videoconsulta.");
 
   function falla(txt) {
     $("cargando").classList.add("hidden");
