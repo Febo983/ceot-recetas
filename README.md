@@ -30,4 +30,6 @@ Function, que usa la service role key y los secrets del proyecto. Las tablas
 tienen RLS activado y ninguna política, así que la clave pública no sirve para
 leer datos.
 
-**Instalación: [`docs/videoconsulta-setup.md`](docs/videoconsulta-setup.md)**
+Estado y pasos pendientes: **[`docs/videoconsulta-setup.md`](docs/videoconsulta-setup.md)**.
+El SQL que falta correr está en
+[`docs/pegar-en-supabase.sql`](docs/pegar-en-supabase.sql).
