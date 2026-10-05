@@ -1,0 +1,456 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Videoconsultas CEOT</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;padding:16px;background:#f7f2e7;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;font-size:15px;line-height:1.5;color:#1f2a24}
+.wrap{max-width:560px;margin:0 auto}
+.card{background:#fff;border:1px solid #d9d2bd;border-radius:12px;padding:20px;margin-bottom:14px}
+h1{margin:0 0 4px;font-size:21px;font-weight:600;color:#20402f}
+h2{margin:0 0 12px;font-size:17px;font-weight:600;color:#20402f}
+p.sub{margin:0 0 16px;font-size:14px;color:#6b7a70}
+label{display:block;margin:0 0 4px;font-size:13px;font-weight:600;color:#3d4a42}
+input,select{width:100%;padding:11px 12px;font-size:16px;font-family:inherit;color:#1f2a24;background:#fff;border:1px solid #c9c2ab;border-radius:8px}
+input:focus,select:focus{outline:none;border-color:#20402f;box-shadow:0 0 0 3px #e6f2ea}
+.field{margin-bottom:14px}
+.row{display:flex;gap:10px}
+.row>.field{flex:1}
+button{width:100%;padding:13px 14px;font-size:16px;font-family:inherit;font-weight:600;border-radius:8px;border:1px solid #20402f;background:#20402f;color:#fff;cursor:pointer}
+button:hover:not(:disabled){background:#2a5440}
+button:disabled{opacity:.55;cursor:default}
+button.sec{background:#fff;color:#20402f}
+button.sec:hover:not(:disabled){background:#f3f8f4}
+button.link{width:auto;padding:0;border:0;background:none;color:#20402f;font-weight:600;font-size:14px;text-decoration:underline}
+.dm{display:inline-block;background:#e6f2ea;color:#20402f;font-size:13px;font-weight:600;padding:3px 10px;border-radius:8px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+.top .who{font-size:14px;color:#3d4a42}
+.top .who strong{display:block;font-size:16px;color:#20402f}
+.msg{margin:0 0 14px;padding:11px 12px;border-radius:8px;font-size:14px}
+.msg.err{background:#fdeaea;border:1px solid #e9b8b8;color:#7d2626}
+.msg.ok{background:#e6f2ea;border:1px solid #bcd9c7;color:#20402f}
+.fine{margin:12px 0 0;font-size:12px;color:#6b7a70}
+.hidden{display:none!important}
+.linkbox{margin:14px 0 0;padding:12px;background:#f3f8f4;border:1px solid #bcd9c7;border-radius:8px}
+.linkbox .url{display:block;margin:0 0 10px;font-size:13px;word-break:break-all;color:#20402f}
+.linkbox .acc{display:flex;gap:8px;flex-wrap:wrap}
+.linkbox .acc button{width:auto;flex:1;min-width:140px;font-size:14px;padding:10px 12px}
+.item{border:1px solid #d9d2bd;border-radius:10px;padding:14px;margin-bottom:10px;background:#fff}
+.item.cancel{opacity:.6}
+.item .cab{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:4px}
+.item .cuando{font-weight:600;color:#20402f;font-size:15px}
+.item .plata{font-weight:600;white-space:nowrap}
+.item .det{font-size:13px;color:#6b7a70;margin-bottom:10px}
+.item .acc{display:flex;gap:8px;flex-wrap:wrap}
+.item .acc button{width:auto;flex:1;min-width:120px;font-size:14px;padding:9px 10px}
+.vacio{font-size:14px;color:#6b7a70;text-align:center;padding:12px 0}
+details summary{cursor:pointer;font-weight:600;color:#20402f;font-size:16px}
+details[open] summary{margin-bottom:14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ingreso -->
+  <section id="vLogin" class="card">
+    <h1>Videoconsultas CEOT</h1>
+    <p class="sub">Ingresá con tu PIN.</p>
+    <div id="loginMsg"></div>
+    <form id="fLogin">
+      <div class="field">
+        <label for="pin">PIN</label>
+        <input id="pin" type="password" inputmode="numeric" autocomplete="off" placeholder="● ● ● ● ● ●" required>
+      </div>
+      <button type="submit" id="bLogin">Entrar</button>
+    </form>
+    <p class="fine">Si no tenés PIN o lo olvidaste, pedilo en administración.</p>
+  </section>
+
+  <!-- app -->
+  <section id="vApp" class="hidden">
+    <div class="top">
+      <div class="who"><strong id="quien"></strong><span id="rol"></span></div>
+      <button class="link" id="bSalir">Salir</button>
+    </div>
+
+    <div id="appMsg"></div>
+
+    <!-- profesional: nueva videoconsulta -->
+    <div class="card hidden" id="cNueva">
+      <h2>Nueva videoconsulta</h2>
+      <form id="fNueva">
+        <div class="field">
+          <label for="paciente">Paciente <span style="font-weight:400;color:#6b7a70">(opcional)</span></label>
+          <input id="paciente" type="text" autocomplete="off" placeholder="Nombre y apellido">
+        </div>
+        <div class="field">
+          <label for="fecha">Día</label>
+          <input id="fecha" type="date" required>
+        </div>
+        <div class="row">
+          <div class="field">
+            <label for="hIni">Comienza</label>
+            <input id="hIni" type="time" step="300" required>
+          </div>
+          <div class="field">
+            <label for="hFin">Termina</label>
+            <input id="hFin" type="time" step="300" required>
+          </div>
+        </div>
+        <div class="field">
+          <label for="monto">Monto de esta consulta</label>
+          <input id="monto" type="number" min="0" step="100" inputmode="numeric" required>
+        </div>
+        <div class="field">
+          <label for="alias">Alias para transferir</label>
+          <input id="alias" type="text" autocomplete="off" required>
+        </div>
+        <button type="submit" id="bCrear">Crear videoconsulta</button>
+      </form>
+      <div id="resultado" class="hidden linkbox">
+        <strong style="display:block;margin-bottom:6px;color:#20402f">Link para el paciente</strong>
+        <a class="url" id="rUrl" href="#" target="_blank" rel="noopener"></a>
+        <div class="acc">
+          <button class="sec" id="rCopiar">Copiar link</button>
+          <button id="rWa">Enviar a la secretaria</button>
+        </div>
+      </div>
+      <p class="fine">El Meet se crea en el calendario de la clínica. El link ya incluye el horario, tu alias y el monto.</p>
+    </div>
+
+    <!-- profesional: datos de cobro -->
+    <div class="card hidden" id="cDatos">
+      <details id="dDatos">
+        <summary>Mis datos de cobro</summary>
+        <form id="fDatos">
+          <div class="field">
+            <label for="pAlias">Alias</label>
+            <input id="pAlias" type="text" autocomplete="off" placeholder="mi.alias.mp" required>
+          </div>
+          <div class="field">
+            <label for="pTitular">Titular de la cuenta <span style="font-weight:400;color:#6b7a70">(opcional)</span></label>
+            <input id="pTitular" type="text" autocomplete="off" placeholder="Como figura en la cuenta">
+          </div>
+          <div class="field">
+            <label for="pMonto">Monto de la videoconsulta</label>
+            <input id="pMonto" type="number" min="0" step="100" inputmode="numeric" required>
+          </div>
+          <button type="submit" id="bDatos" class="sec">Guardar mis datos</button>
+        </form>
+        <p class="fine">Se usan como valor por defecto en cada videoconsulta nueva. Igual los podés cambiar en cada una.</p>
+      </details>
+    </div>
+
+    <!-- listado -->
+    <div class="card">
+      <div class="top" style="margin-bottom:10px">
+        <h2 style="margin:0" id="tLista">Videoconsultas</h2>
+        <button class="link" id="bRefrescar">Actualizar</button>
+      </div>
+      <div id="lista"><p class="vacio">Cargando…</p></div>
+    </div>
+  </section>
+
+</div>
+
+<script src="config.js"></script>
+<script>
+(function () {
+  "use strict";
+  var CFG = window.VC_CONFIG || {};
+  var LS = "vc_sesion";
+  var yo = null, consultas = [];
+
+  var $ = function (id) { return document.getElementById(id); };
+
+  function api(accion, datos) {
+    var body = Object.assign({ accion: accion, sesion: localStorage.getItem(LS) || "" }, datos || {});
+    return fetch(CFG.FN_URL, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        "apikey": CFG.ANON_KEY,
+        "authorization": "Bearer " + CFG.ANON_KEY
+      },
+      body: JSON.stringify(body)
+    }).then(function (r) {
+      return r.json().catch(function () { return { ok: false, error: "Respuesta inesperada del servidor." }; });
+    }).catch(function () {
+      return { ok: false, error: "Sin conexión. Revisá internet y probá de nuevo." };
+    });
+  }
+
+  function aviso(cont, texto, tipo) {
+    cont.innerHTML = "";
+    if (!texto) return;
+    var d = document.createElement("div");
+    d.className = "msg " + (tipo || "err");
+    d.textContent = texto;
+    cont.appendChild(d);
+  }
+
+  var fmtPlata = function (n) {
+    try {
+      return new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", maximumFractionDigits: 0 }).format(n);
+    } catch (e) { return "$" + n; }
+  };
+
+  function fmtFecha(iso) {
+    var p = iso.split("-");
+    var d = new Date(Number(p[0]), Number(p[1]) - 1, Number(p[2]));
+    try {
+      var s = d.toLocaleDateString("es-AR", { weekday: "long", day: "numeric", month: "long" });
+      return s.charAt(0).toUpperCase() + s.slice(1);
+    } catch (e) { return p[2] + "/" + p[1]; }
+  }
+
+  function copiar(texto, boton) {
+    var listo = function () {
+      var t = boton.textContent;
+      boton.textContent = "¡Copiado!";
+      setTimeout(function () { boton.textContent = t; }, 1600);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(texto).then(listo, function () { window.prompt("Copiá el link:", texto); });
+    } else {
+      window.prompt("Copiá el link:", texto);
+    }
+  }
+
+  function textoWa(c) {
+    return "Videoconsulta con " + (c.profesional || (yo && yo.nombre) || "") + "\n" +
+      fmtFecha(c.fecha) + " de " + c.hora_inicio + " a " + c.hora_fin + " hs\n" +
+      (c.paciente_nombre ? "Paciente: " + c.paciente_nombre + "\n" : "") +
+      "Monto: " + fmtPlata(c.monto) + "\n" +
+      "Alias: " + c.alias + "\n\n" +
+      "Link para el paciente: " + c.link;
+  }
+
+  function wa(numero, texto) {
+    window.open("https://wa.me/" + numero + "?text=" + encodeURIComponent(texto), "_blank", "noopener");
+  }
+
+  // ---------- ingreso ----------
+  $("fLogin").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var pin = $("pin").value.trim();
+    if (!pin) return;
+    $("bLogin").disabled = true;
+    $("bLogin").textContent = "Entrando…";
+    aviso($("loginMsg"), "");
+    api("login", { pin: pin }).then(function (r) {
+      $("bLogin").disabled = false;
+      $("bLogin").textContent = "Entrar";
+      if (!r.ok) { aviso($("loginMsg"), r.error || "No pudimos entrar."); return; }
+      localStorage.setItem(LS, r.token);
+      $("pin").value = "";
+      entrar(r.usuario);
+    });
+  });
+
+  $("bSalir").addEventListener("click", function () {
+    api("salir", {});
+    localStorage.removeItem(LS);
+    location.reload();
+  });
+
+  function entrar(usuario) {
+    yo = usuario;
+    $("vLogin").classList.add("hidden");
+    $("vApp").classList.remove("hidden");
+    $("quien").textContent = usuario.nombre;
+    $("rol").textContent = usuario.rol === "profesional" ? "Profesional" : "Secretaría";
+
+    if (usuario.rol === "profesional") {
+      $("cNueva").classList.remove("hidden");
+      $("cDatos").classList.remove("hidden");
+      $("tLista").textContent = "Mis videoconsultas";
+      $("pAlias").value = usuario.alias || "";
+      $("pTitular").value = usuario.alias_titular || "";
+      $("pMonto").value = usuario.monto != null ? usuario.monto : "";
+      $("alias").value = usuario.alias || "";
+      $("monto").value = usuario.monto != null ? usuario.monto : "";
+      if (!usuario.alias || usuario.monto == null) {
+        $("dDatos").open = true;
+        aviso($("appMsg"), "Cargá tu alias y tu monto para empezar.", "ok");
+      }
+      try {
+        $("fecha").min = new Date().toLocaleDateString("en-CA", { timeZone: "America/Argentina/Buenos_Aires" });
+      } catch (e) { /* sin min: lo valida el servidor */ }
+    } else {
+      $("tLista").textContent = "Todas las videoconsultas";
+    }
+    listar();
+  }
+
+  // ---------- datos de cobro ----------
+  $("fDatos").addEventListener("submit", function (e) {
+    e.preventDefault();
+    $("bDatos").disabled = true;
+    api("perfil", {
+      alias: $("pAlias").value,
+      alias_titular: $("pTitular").value,
+      monto: $("pMonto").value
+    }).then(function (r) {
+      $("bDatos").disabled = false;
+      if (!r.ok) { aviso($("appMsg"), r.error); return; }
+      yo = r.usuario;
+      $("alias").value = yo.alias || "";
+      $("monto").value = yo.monto != null ? yo.monto : "";
+      $("dDatos").open = false;
+      aviso($("appMsg"), "Datos guardados.", "ok");
+    });
+  });
+
+  // ---------- nueva videoconsulta ----------
+  $("hIni").addEventListener("change", function () {
+    if (!$("hIni").value || $("hFin").value) return;
+    var p = $("hIni").value.split(":");
+    var m = Number(p[0]) * 60 + Number(p[1]) + 30;
+    if (m >= 1440) return;
+    $("hFin").value = String(Math.floor(m / 60)).padStart(2, "0") + ":" + String(m % 60).padStart(2, "0");
+  });
+
+  $("fNueva").addEventListener("submit", function (e) {
+    e.preventDefault();
+    $("bCrear").disabled = true;
+    $("bCrear").textContent = "Creando el Meet…";
+    aviso($("appMsg"), "");
+    $("resultado").classList.add("hidden");
+    api("crear", {
+      paciente_nombre: $("paciente").value,
+      fecha: $("fecha").value,
+      hora_inicio: $("hIni").value,
+      hora_fin: $("hFin").value,
+      monto: $("monto").value,
+      alias: $("alias").value,
+      alias_titular: $("pTitular").value
+    }).then(function (r) {
+      $("bCrear").disabled = false;
+      $("bCrear").textContent = "Crear videoconsulta";
+      if (!r.ok) { aviso($("appMsg"), r.error); return; }
+      mostrarResultado(r.consulta);
+      $("paciente").value = "";
+      listar();
+    });
+  });
+
+  function mostrarResultado(c) {
+    var box = $("resultado");
+    box.classList.remove("hidden");
+    $("rUrl").href = c.link;
+    $("rUrl").textContent = c.link;
+    $("rCopiar").onclick = function () { copiar(c.link, $("rCopiar")); };
+    $("rWa").onclick = function () { wa(CFG.WA_SECRETARIA, textoWa(c)); };
+    aviso($("appMsg"), "Videoconsulta creada para el " + fmtFecha(c.fecha) + " a las " + c.hora_inicio + " hs.", "ok");
+    box.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
+
+  // ---------- listado ----------
+  $("bRefrescar").addEventListener("click", listar);
+
+  function listar() {
+    api("listar", {}).then(function (r) {
+      if (!r.ok) {
+        if (r.error && r.error.indexOf("sesión") !== -1) { localStorage.removeItem(LS); location.reload(); return; }
+        $("lista").innerHTML = "";
+        aviso($("appMsg"), r.error);
+        return;
+      }
+      consultas = r.consultas;
+      pintarLista();
+    });
+  }
+
+  function pintarLista() {
+    var cont = $("lista");
+    cont.innerHTML = "";
+    if (!consultas.length) {
+      cont.innerHTML = '<p class="vacio">Todavía no hay videoconsultas.</p>';
+      return;
+    }
+    consultas.forEach(function (c) {
+      var div = document.createElement("div");
+      div.className = "item" + (c.estado === "cancelada" ? " cancel" : "");
+
+      var cab = document.createElement("div");
+      cab.className = "cab";
+      var cuando = document.createElement("span");
+      cuando.className = "cuando";
+      cuando.textContent = fmtFecha(c.fecha) + " · " + c.hora_inicio + " a " + c.hora_fin;
+      var plata = document.createElement("span");
+      plata.className = "plata";
+      plata.textContent = fmtPlata(c.monto);
+      cab.appendChild(cuando);
+      cab.appendChild(plata);
+      div.appendChild(cab);
+
+      var det = document.createElement("div");
+      det.className = "det";
+      var partes = [];
+      if (yo.rol === "secretaria") partes.push(c.profesional);
+      if (c.paciente_nombre) partes.push(c.paciente_nombre);
+      partes.push("Alias: " + c.alias);
+      if (c.estado === "cancelada") partes.push("CANCELADA");
+      det.textContent = partes.join(" · ");
+      div.appendChild(det);
+
+      if (c.estado === "activa") {
+        var acc = document.createElement("div");
+        acc.className = "acc";
+
+        var bCopy = document.createElement("button");
+        bCopy.className = "sec";
+        bCopy.textContent = "Copiar link";
+        bCopy.onclick = function () { copiar(c.link, bCopy); };
+        acc.appendChild(bCopy);
+
+        var bWa = document.createElement("button");
+        bWa.className = "sec";
+        bWa.textContent = yo.rol === "secretaria" ? "Pasar por WhatsApp" : "Enviar a la secretaria";
+        bWa.onclick = function () {
+          if (yo.rol === "secretaria") wa("", textoWa(c));
+          else wa(CFG.WA_SECRETARIA, textoWa(c));
+        };
+        acc.appendChild(bWa);
+
+        if (yo.rol === "profesional") {
+          var bCanc = document.createElement("button");
+          bCanc.className = "sec";
+          bCanc.textContent = "Cancelar";
+          bCanc.onclick = function () {
+            if (!window.confirm("¿Cancelar esta videoconsulta? Se borra del calendario y el link deja de funcionar.")) return;
+            bCanc.disabled = true;
+            api("cancelar", { id: c.id }).then(function (r) {
+              bCanc.disabled = false;
+              if (!r.ok) { aviso($("appMsg"), r.error); return; }
+              aviso($("appMsg"), "Videoconsulta cancelada.", "ok");
+              listar();
+            });
+          };
+          acc.appendChild(bCanc);
+        }
+        div.appendChild(acc);
+      }
+      cont.appendChild(div);
+    });
+  }
+
+  // ---------- arranque ----------
+  if (!CFG.FN_URL || CFG.FN_URL.indexOf("TU-PROYECTO") !== -1) {
+    aviso($("loginMsg"), "Falta configurar la app: completá videoconsulta/config.js.");
+    return;
+  }
+  if (localStorage.getItem(LS)) {
+    api("yo", {}).then(function (r) {
+      if (r.ok) entrar(r.usuario);
+      else localStorage.removeItem(LS);
+    });
+  }
+})();
+</script>
+</body>
+</html>
