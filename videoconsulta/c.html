@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="referrer" content="no-referrer">
+<title>Tu videoconsulta - CEOT</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;padding:16px;background:#f7f2e7;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;font-size:15px;line-height:1.5;color:#1f2a24}
+.wrap{max-width:520px;margin:0 auto}
+.card{background:#fff;border:1px solid #d9d2bd;border-radius:12px;padding:20px;margin-bottom:14px}
+h1{margin:0 0 4px;font-size:21px;font-weight:600;color:#20402f}
+.prof{margin:0 0 16px;font-size:15px;color:#3d4a42}
+.cuando{background:#f3f8f4;border:1px solid #a8ccb6;border-radius:10px;padding:14px;margin-bottom:16px}
+.cuando .dia{font-size:17px;font-weight:600;color:#20402f}
+.cuando .dia::first-letter{text-transform:uppercase}
+.cuando .hora{font-size:15px;color:#3d4a42}
+.cuando .falta{display:inline-block;margin-top:6px;background:#e6f2ea;color:#20402f;font-size:12px;font-weight:600;padding:2px 8px;border-radius:7px}
+h2{margin:0 0 10px;font-size:17px;font-weight:600;color:#20402f}
+.paso{border-top:1px solid #e6e0ce;padding-top:16px;margin-top:16px}
+.monto{font-size:24px;font-weight:600;color:#20402f;margin:0 0 2px}
+.aliasCaja{display:flex;align-items:center;gap:10px;border:1px solid #c9c2ab;border-radius:8px;padding:11px 12px;margin:10px 0 6px;background:#fff}
+.aliasCaja .val{flex:1;font-size:17px;font-weight:600;color:#1f2a24;word-break:break-all}
+.aliasCaja button{flex:0 0 auto;padding:8px 12px;border:1px solid #c9c2ab;border-radius:8px;background:#fff;color:#20402f;font-size:14px;font-weight:600;font-family:inherit;cursor:pointer}
+.aliasCaja button:hover{background:#f3f8f4;border-color:#20402f}
+.titular{margin:0;font-size:13px;color:#6b7a70}
+a.btn,button.btn{display:block;width:100%;padding:14px;border:0;border-radius:8px;background:#20402f;color:#fff;font-size:17px;font-weight:600;font-family:inherit;text-align:center;text-decoration:none;cursor:pointer}
+a.btn:hover{background:#2b5340}
+p.hint{margin:10px 0 0;font-size:13px;color:#6b7a70}
+p.dato{margin:0 0 6px;font-size:14px;color:#3d4a42}
+.msg{padding:14px;border-radius:10px;font-size:15px}
+.msg.err{background:#fdeceb;border:1px solid #e7b9b5;color:#8a2b22}
+.msg.gris{background:#faf8f3;border:1px solid #d9d2bd;color:#3d4a42}
+.wa{display:block;margin-top:16px;text-align:center;font-size:14px;color:#20402f}
+.pie{margin:0;font-size:12px;color:#6b7a70;text-align:center}
+.oculto{display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card" id="caja">
+    <p class="dato" id="cargando">Abriendo tu videoconsulta…</p>
+  </div>
+  <p class="pie">Centro de Especialidades Ortopédicas y Traumatológicas</p>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var API = "https://guodzzlgomklcslgvzkk.supabase.co/functions/v1/videoconsulta";
+  // Clave publica (anon). Las tablas estan cerradas con RLS: todo pasa por la
+  // Edge Function, que con este token solo devuelve los datos de este link.
+  var CLAVE = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd1b2R6emxnb21rbGNzbGd2emtrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEyMDM1OTQsImV4cCI6MjEwNjc3OTU5NH0.ro5ENcBTLSWChpoTqVi8x8dzfDnWNW7qtESRUMsoJV4";
+  var WHATSAPP = "5492235823068";
+
+  var MESES = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+  var DIAS = ["domingo","lunes","martes","miércoles","jueves","viernes","sábado"];
+
+  var caja = document.getElementById("caja");
+
+  function hoyArg() {
+    return new Intl.DateTimeFormat("en-CA", {
+      timeZone: "America/Argentina/Buenos_Aires",
+      year: "numeric", month: "2-digit", day: "2-digit"
+    }).format(new Date());
+  }
+
+  function fechaLarga(iso) {
+    var p = String(iso).split("-");
+    var d = new Date(Number(p[0]), Number(p[1]) - 1, Number(p[2]));
+    return DIAS[d.getDay()] + " " + d.getDate() + " de " + MESES[d.getMonth()];
+  }
+
+  function diasHasta(iso) {
+    var p = String(iso).split("-");
+    var h = hoyArg().split("-");
+    var a = Date.UTC(Number(p[0]), Number(p[1]) - 1, Number(p[2]));
+    var b = Date.UTC(Number(h[0]), Number(h[1]) - 1, Number(h[2]));
+    return Math.round((a - b) / 86400000);
+  }
+
+  function plata(n) {
+    return "$" + Number(n).toLocaleString("es-AR");
+  }
+
+  function nodo(tag, clase, texto) {
+    var e = document.createElement(tag);
+    if (clase) e.className = clase;
+    if (texto !== undefined) e.textContent = texto;
+    return e;
+  }
+
+  function linkWhatsApp(texto) {
+    var a = nodo("a", "wa", texto);
+    a.href = "https://wa.me/" + WHATSAPP + "?text=" +
+      encodeURIComponent("Hola, tengo una consulta sobre mi videoconsulta.");
+    a.target = "_blank";
+    a.rel = "noopener";
+    return a;
+  }
+
+  function mostrarError(texto, conWhatsApp) {
+    caja.innerHTML = "";
+    caja.appendChild(nodo("h1", null, "No pudimos abrir el link"));
+    caja.appendChild(nodo("div", "msg err", texto));
+    if (conWhatsApp !== false) caja.appendChild(linkWhatsApp("Escribinos por WhatsApp"));
+  }
+
+  async function copiar(texto, boton) {
+    var ok = false;
+    try {
+      await navigator.clipboard.writeText(texto);
+      ok = true;
+    } catch (e) {
+      try {
+        var t = document.createElement("textarea");
+        t.value = texto;
+        t.setAttribute("readonly", "");
+        t.style.position = "fixed";
+        t.style.opacity = "0";
+        document.body.appendChild(t);
+        t.select();
+        ok = document.execCommand("copy");
+        document.body.removeChild(t);
+      } catch (e2) { ok = false; }
+    }
+    var antes = boton.dataset.texto || boton.textContent;
+    boton.dataset.texto = antes;
+    boton.textContent = ok ? "¡Copiado!" : "Copiá a mano";
+    setTimeout(function () { boton.textContent = antes; }, 1600);
+  }
+
+  function pintar(c) {
+    caja.innerHTML = "";
+
+    caja.appendChild(nodo("h1", null, "Tu videoconsulta"));
+    caja.appendChild(nodo("p", "prof", "Con " + c.profesional +
+      (c.paciente_nombre ? " · " + c.paciente_nombre : "")));
+
+    // Cuando
+    var cuando = nodo("div", "cuando");
+    cuando.appendChild(nodo("div", "dia", fechaLarga(c.fecha)));
+    cuando.appendChild(nodo("div", "hora", "De " + c.hora_inicio + " a " + c.hora_fin + " hs"));
+    var d = diasHasta(c.fecha);
+    var falta = d === 0 ? "Es hoy" : d === 1 ? "Es mañana" : d > 1 ? "Faltan " + d + " días" : null;
+    if (falta) cuando.appendChild(nodo("span", "falta", falta));
+    caja.appendChild(cuando);
+
+    if (c.estado === "cancelada" || !c.meet_url) {
+      caja.appendChild(nodo("div", "msg err",
+        "Esta videoconsulta fue cancelada. Si no la cancelaste vos, escribinos y la coordinamos de nuevo."));
+      caja.appendChild(linkWhatsApp("Escribinos por WhatsApp"));
+      return;
+    }
+
+    if (d < 0) {
+      caja.appendChild(nodo("div", "msg gris",
+        "Esta videoconsulta ya pasó. El link queda disponible por si la reprogramaron."));
+    }
+
+    // Paso 1: pagar
+    var p1 = nodo("div", "paso");
+    p1.appendChild(nodo("h2", null, "1. Transferí la consulta"));
+    p1.appendChild(nodo("p", "monto", plata(c.monto)));
+    p1.appendChild(nodo("p", "titular", "Transferí a este alias:"));
+
+    var ac = nodo("div", "aliasCaja");
+    ac.appendChild(nodo("span", "val", c.alias));
+    var bCopiar = nodo("button", null, "Copiar");
+    bCopiar.type = "button";
+    bCopiar.addEventListener("click", function () { copiar(c.alias, bCopiar); });
+    ac.appendChild(bCopiar);
+    p1.appendChild(ac);
+
+    if (c.alias_titular) {
+      p1.appendChild(nodo("p", "titular", "A nombre de " + c.alias_titular));
+    }
+    p1.appendChild(nodo("p", "hint",
+      "Guardá el comprobante: te lo puede pedir el profesional al empezar la videoconsulta."));
+    caja.appendChild(p1);
+
+    // Paso 2: entrar
+    var p2 = nodo("div", "paso");
+    p2.appendChild(nodo("h2", null, "2. Entrá a la hora de tu turno"));
+    var a = nodo("a", "btn", "Entrar a la videoconsulta");
+    a.href = c.meet_url;
+    a.target = "_blank";
+    a.rel = "noopener";
+    p2.appendChild(a);
+    p2.appendChild(nodo("p", "hint",
+      "Se abre Google Meet. Entrá unos minutos antes, desde un lugar tranquilo y con buena señal. " +
+      "Si te pide permiso de cámara y micrófono, aceptá."));
+    p2.appendChild(nodo("p", "hint",
+      "Guardá este link: es el mismo que vas a usar el día de la videoconsulta."));
+    caja.appendChild(p2);
+
+    caja.appendChild(linkWhatsApp("¿Tenés alguna duda? Escribinos por WhatsApp"));
+  }
+
+  (async function () {
+    var token = (new URLSearchParams(location.search).get("t") || "").trim().toLowerCase();
+    if (!/^[a-f0-9]{20}$/.test(token)) {
+      mostrarError("El link está incompleto. Volvé a abrirlo desde el mensaje que te mandaron, sin cortarlo.");
+      return;
+    }
+
+    var r, data;
+    try {
+      r = await fetch(API, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          "apikey": CLAVE,
+          "authorization": "Bearer " + CLAVE
+        },
+        body: JSON.stringify({ accion: "consulta", token: token })
+      });
+      data = await r.json();
+    } catch (e) {
+      mostrarError("No hay conexión. Revisá internet y volvé a abrir el link.", false);
+      return;
+    }
+
+    if (!r.ok || !data || data.ok !== true || !data.consulta) {
+      mostrarError((data && data.error) || "Este link no es válido o ya no está disponible.");
+      return;
+    }
+
+    pintar(data.consulta);
+  })();
+})();
+</script>
+</body>
+</html>

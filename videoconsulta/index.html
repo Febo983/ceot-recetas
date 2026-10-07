@@ -1,0 +1,598 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Videoconsultas - CEOT</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;padding:16px;background:#f7f2e7;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;font-size:15px;line-height:1.5;color:#1f2a24}
+.wrap{max-width:520px;margin:0 auto}
+.card{background:#fff;border:1px solid #d9d2bd;border-radius:12px;padding:20px;margin-bottom:14px}
+h1{margin:0 0 4px;font-size:21px;font-weight:600;color:#20402f}
+h2{margin:0 0 12px;font-size:17px;font-weight:600;color:#20402f}
+p.sub{margin:0 0 16px;font-size:14px;color:#6b7a70}
+label{display:block;margin:0 0 4px;font-size:13px;font-weight:600;color:#3d4a42}
+input,select{width:100%;padding:11px 12px;border:1px solid #c9c2ab;border-radius:8px;background:#fff;font-size:16px;font-family:inherit;color:#1f2a24}
+input:focus,select:focus{outline:none;border-color:#20402f}
+.f{margin-bottom:12px}
+.f .hint{margin:4px 0 0;font-size:12px;color:#6b7a70}
+.row{display:flex;gap:10px}
+.row .f{flex:1}
+button{width:100%;padding:13px 14px;border:0;border-radius:8px;background:#20402f;color:#fff;font-size:16px;font-weight:600;font-family:inherit;cursor:pointer}
+button:hover{background:#2b5340}
+button[disabled]{opacity:.55;cursor:default}
+button.sec{background:#fff;color:#20402f;border:1px solid #c9c2ab;font-weight:600}
+button.sec:hover{background:#f3f8f4;border-color:#20402f}
+button.mini{width:auto;padding:8px 12px;font-size:14px}
+.msg{margin:0 0 14px;padding:11px 12px;border-radius:8px;font-size:14px}
+.msg.err{background:#fdeceb;border:1px solid #e7b9b5;color:#8a2b22}
+.msg.ok{background:#e6f2ea;border:1px solid #a8ccb6;color:#20402f}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+.top .who{font-size:14px;color:#3d4a42}
+.top .who strong{display:block;font-size:16px;color:#20402f}
+.top button{width:auto;padding:8px 12px;font-size:14px}
+.cons{border:1px solid #c9c2ab;border-radius:10px;padding:14px;margin-bottom:10px}
+.cons.cancel{opacity:.6;background:#faf8f3}
+.cons .cab{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:2px}
+.cons .dia{font-size:16px;font-weight:600;color:#20402f}
+.cons .dia::first-letter{text-transform:uppercase}
+.cons .hora{font-size:15px;color:#3d4a42;white-space:nowrap}
+.cons .dato{font-size:14px;color:#3d4a42}
+.acc{display:flex;flex-wrap:wrap;gap:8px}
+.acc button{width:auto;flex:1 1 auto;padding:9px 12px;font-size:14px}
+.cons .acc{margin-top:12px}
+.tag{display:inline-block;background:#e6f2ea;color:#20402f;font-size:12px;font-weight:600;padding:2px 8px;border-radius:7px}
+.tag.no{background:#f0ece1;color:#6b7a70}
+.vacio{margin:0;font-size:14px;color:#6b7a70}
+.filtros{display:flex;gap:8px;margin-bottom:14px}
+.filtros button{width:auto;flex:1;padding:9px 10px;font-size:14px;background:#fff;color:#3d4a42;border:1px solid #c9c2ab}
+.filtros button.on{background:#20402f;color:#fff;border-color:#20402f}
+.nuevo{background:#f3f8f4;border:1px solid #a8ccb6;border-radius:10px;padding:14px;margin-bottom:14px}
+.nuevo .tit{margin:0 0 8px;font-size:15px;font-weight:600;color:#20402f}
+.nuevo .link{display:block;width:100%;padding:10px 12px;border:1px solid #c9c2ab;border-radius:8px;background:#fff;font-size:13px;color:#1f2a24;word-break:break-all;margin-bottom:10px}
+details{border-top:1px solid #e6e0ce;padding-top:14px;margin-top:4px}
+details summary{font-size:15px;font-weight:600;color:#20402f;cursor:pointer}
+details .cuerpo{padding-top:14px}
+.oculto{display:none}
+.carg{margin:0;font-size:14px;color:#6b7a70}
+.pie{margin:0;font-size:12px;color:#6b7a70}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ===== Login ===== -->
+  <div class="card" id="pantallaLogin">
+    <h1>Videoconsultas CEOT</h1>
+    <p class="sub">Entrá con tu PIN para crear y ver videoconsultas.</p>
+    <div id="msgLogin"></div>
+    <form id="formLogin">
+      <div class="f">
+        <label for="pin">Tu PIN</label>
+        <input id="pin" type="password" inputmode="numeric" autocomplete="current-password" placeholder="••••" required>
+        <p class="hint">Es el PIN que te dio la clínica. Si no lo tenés, pedilo en administración.</p>
+      </div>
+      <button type="submit" id="btnEntrar">Entrar</button>
+    </form>
+  </div>
+
+  <!-- ===== App ===== -->
+  <div id="pantallaApp" class="oculto">
+    <div class="top">
+      <div class="who"><strong id="nombreUsuario"></strong><span id="rolUsuario"></span></div>
+      <button class="sec" id="btnSalir">Salir</button>
+    </div>
+
+    <!-- Crear (solo profesionales) -->
+    <div class="card oculto" id="cardCrear">
+      <h2>Nueva videoconsulta</h2>
+      <div id="msgCrear"></div>
+      <div class="nuevo oculto" id="cajaNueva">
+        <p class="tit">Listo. Mandale este link al paciente:</p>
+        <span class="link" id="linkNueva"></span>
+        <div class="acc">
+          <button class="sec" id="btnCopiarNueva">Copiar link</button>
+          <button class="sec" id="btnWhatsNueva">Enviar por WhatsApp</button>
+        </div>
+      </div>
+      <form id="formCrear">
+        <div class="f">
+          <label for="paciente">Paciente <span style="font-weight:400;color:#6b7a70">(opcional)</span></label>
+          <input id="paciente" type="text" maxlength="80" autocomplete="off" placeholder="Nombre y apellido">
+        </div>
+        <div class="f">
+          <label for="fecha">Día</label>
+          <input id="fecha" type="date" required>
+        </div>
+        <div class="row">
+          <div class="f">
+            <label for="horaInicio">Desde</label>
+            <input id="horaInicio" type="time" step="300" required>
+          </div>
+          <div class="f">
+            <label for="horaFin">Hasta</label>
+            <input id="horaFin" type="time" step="300" required>
+          </div>
+        </div>
+        <div class="f">
+          <label for="monto">Monto a cobrar</label>
+          <input id="monto" type="number" inputmode="numeric" min="0" max="99999999" step="1" required placeholder="25000">
+        </div>
+        <div class="f">
+          <label for="alias">Alias para transferir</label>
+          <input id="alias" type="text" maxlength="60" autocomplete="off" required placeholder="mi.alias.mp">
+        </div>
+        <div class="f">
+          <label for="aliasTitular">Titular de la cuenta <span style="font-weight:400;color:#6b7a70">(opcional)</span></label>
+          <input id="aliasTitular" type="text" maxlength="80" autocomplete="off" placeholder="Como figura en el banco">
+        </div>
+        <button type="submit" id="btnCrear">Crear videoconsulta</button>
+        <p class="hint" style="text-align:center;margin-top:10px">Se crea el Meet en el calendario de la clínica y se genera el link para el paciente.</p>
+      </form>
+
+      <details id="cajaPerfil">
+        <summary>Mis datos de cobro</summary>
+        <div class="cuerpo">
+          <p class="hint" style="margin:0 0 12px">Se usan por defecto en cada videoconsulta nueva.</p>
+          <div id="msgPerfil"></div>
+          <form id="formPerfil">
+            <div class="f">
+              <label for="pAlias">Alias para transferir</label>
+              <input id="pAlias" type="text" maxlength="60" autocomplete="off" required>
+            </div>
+            <div class="f">
+              <label for="pTitular">Titular de la cuenta <span style="font-weight:400;color:#6b7a70">(opcional)</span></label>
+              <input id="pTitular" type="text" maxlength="80" autocomplete="off">
+            </div>
+            <div class="f">
+              <label for="pMonto">Monto habitual</label>
+              <input id="pMonto" type="number" inputmode="numeric" min="0" max="99999999" step="1" required>
+            </div>
+            <button type="submit" class="sec" id="btnPerfil">Guardar mis datos</button>
+          </form>
+        </div>
+      </details>
+    </div>
+
+    <!-- Listado -->
+    <div class="card">
+      <h2 id="tituloLista">Videoconsultas</h2>
+      <div class="filtros">
+        <button class="on" id="btnProximas" data-desde="proximas">Próximas</button>
+        <button id="btnTodas" data-desde="todas">Todas</button>
+      </div>
+      <div id="msgLista"></div>
+      <div id="lista"><p class="carg">Cargando…</p></div>
+    </div>
+
+    <p class="pie">Las videoconsultas se cargan en el calendario de la clínica. Tu sesión se cierra sola a las 12 horas.</p>
+  </div>
+
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var API = "https://guodzzlgomklcslgvzkk.supabase.co/functions/v1/videoconsulta";
+  // Clave publica (anon). No da acceso a nada por si sola: las tablas estan
+  // cerradas con RLS y todo pasa por la Edge Function.
+  var CLAVE = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd1b2R6emxnb21rbGNzbGd2emtrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEyMDM1OTQsImV4cCI6MjEwNjc3OTU5NH0.ro5ENcBTLSWChpoTqVi8x8dzfDnWNW7qtESRUMsoJV4";
+  var LLAVE_SESION = "vc_sesion";
+
+  var MESES = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+  var DIAS = ["domingo","lunes","martes","miércoles","jueves","viernes","sábado"];
+
+  var sesion = null;
+  var usuario = null;
+  var desde = "proximas";
+
+  var $ = function (id) { return document.getElementById(id); };
+
+  // --- helpers ---------------------------------------------------------
+
+  async function pedir(accion, datos) {
+    var cuerpo = Object.assign({ accion: accion }, datos || {});
+    if (sesion) cuerpo.sesion = sesion;
+
+    var r, data;
+    try {
+      r = await fetch(API, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          "apikey": CLAVE,
+          "authorization": "Bearer " + CLAVE
+        },
+        body: JSON.stringify(cuerpo)
+      });
+      data = await r.json();
+    } catch (e) {
+      throw new Error("No hay conexión. Revisá internet y probá de nuevo.");
+    }
+
+    if (!r.ok || !data || data.ok !== true) {
+      var msg = (data && data.error) || "Hubo un error. Probá de nuevo.";
+      if (r.status === 401 && sesion && accion !== "login") {
+        cerrarSesion(msg);
+        throw new Error(msg);
+      }
+      throw new Error(msg);
+    }
+    return data;
+  }
+
+  function aviso(donde, texto, tipo) {
+    var c = $(donde);
+    if (!texto) { c.innerHTML = ""; return; }
+    var d = document.createElement("div");
+    d.className = "msg " + (tipo || "err");
+    d.setAttribute("role", "status");
+    d.textContent = texto;
+    c.innerHTML = "";
+    c.appendChild(d);
+  }
+
+  function ocupado(boton, texto) {
+    var b = $(boton);
+    if (texto) {
+      b.dataset.texto = b.textContent;
+      b.textContent = texto;
+      b.disabled = true;
+    } else {
+      if (b.dataset.texto) b.textContent = b.dataset.texto;
+      b.disabled = false;
+    }
+  }
+
+  function hoyArg() {
+    return new Intl.DateTimeFormat("en-CA", {
+      timeZone: "America/Argentina/Buenos_Aires",
+      year: "numeric", month: "2-digit", day: "2-digit"
+    }).format(new Date());
+  }
+
+  // "2026-10-13" -> "martes 13 de octubre"
+  function fechaLarga(iso) {
+    var p = String(iso).split("-");
+    var d = new Date(Number(p[0]), Number(p[1]) - 1, Number(p[2]));
+    return DIAS[d.getDay()] + " " + d.getDate() + " de " + MESES[d.getMonth()];
+  }
+
+  function plata(n) {
+    return "$" + Number(n).toLocaleString("es-AR");
+  }
+
+  async function copiar(texto, boton) {
+    var ok = false;
+    try {
+      await navigator.clipboard.writeText(texto);
+      ok = true;
+    } catch (e) {
+      // Safari viejo y http: caemos al textarea + execCommand.
+      try {
+        var t = document.createElement("textarea");
+        t.value = texto;
+        t.setAttribute("readonly", "");
+        t.style.position = "fixed";
+        t.style.opacity = "0";
+        document.body.appendChild(t);
+        t.select();
+        ok = document.execCommand("copy");
+        document.body.removeChild(t);
+      } catch (e2) { ok = false; }
+    }
+    if (boton) {
+      var antes = boton.dataset.texto || boton.textContent;
+      boton.dataset.texto = antes;
+      boton.textContent = ok ? "¡Copiado!" : "Copiá a mano";
+      setTimeout(function () { boton.textContent = antes; }, 1600);
+    }
+    return ok;
+  }
+
+  function textoWhatsApp(c) {
+    return "Hola" + (c.paciente_nombre ? " " + c.paciente_nombre : "") + "! Te dejo el link de tu videoconsulta " +
+      fechaLarga(c.fecha) + " a las " + c.hora_inicio + " hs.\n\n" + c.link +
+      "\n\nAhí vas a ver el alias para transferir y el botón para entrar a la videollamada.";
+  }
+
+  function abrirWhatsApp(c) {
+    window.open("https://wa.me/?text=" + encodeURIComponent(textoWhatsApp(c)), "_blank", "noopener");
+  }
+
+  // --- sesion ----------------------------------------------------------
+
+  function guardarSesion(token) {
+    sesion = token;
+    try { localStorage.setItem(LLAVE_SESION, token); } catch (e) {}
+  }
+
+  function cerrarSesion(motivo) {
+    sesion = null;
+    usuario = null;
+    try { localStorage.removeItem(LLAVE_SESION); } catch (e) {}
+    $("pantallaApp").classList.add("oculto");
+    $("pantallaLogin").classList.remove("oculto");
+    $("pin").value = "";
+    aviso("msgLogin", motivo || "", "err");
+  }
+
+  function entrar(u) {
+    usuario = u;
+    $("pantallaLogin").classList.add("oculto");
+    $("pantallaApp").classList.remove("oculto");
+    $("nombreUsuario").textContent = u.nombre;
+    $("rolUsuario").textContent = u.rol === "profesional" ? "Profesional" : "Secretaría";
+
+    var esProf = u.rol === "profesional";
+    $("cardCrear").classList.toggle("oculto", !esProf);
+    $("tituloLista").textContent = esProf ? "Mis videoconsultas" : "Videoconsultas de la clínica";
+
+    if (esProf) {
+      $("fecha").min = hoyArg();
+      $("fecha").value = hoyArg();
+      $("alias").value = u.alias || "";
+      $("aliasTitular").value = u.alias_titular || "";
+      $("monto").value = (u.monto === null || u.monto === undefined) ? "" : Number(u.monto);
+      $("pAlias").value = u.alias || "";
+      $("pTitular").value = u.alias_titular || "";
+      $("pMonto").value = (u.monto === null || u.monto === undefined) ? "" : Number(u.monto);
+      // Sin datos de cobro todavia: dejamos esa seccion abierta a la vista.
+      if (!u.alias || u.monto === null || u.monto === undefined) {
+        $("cajaPerfil").open = true;
+      }
+    }
+
+    cargarLista();
+  }
+
+  // --- listado ---------------------------------------------------------
+
+  function pintarConsulta(c) {
+    var caja = document.createElement("div");
+    caja.className = "cons" + (c.estado === "cancelada" ? " cancel" : "");
+
+    var cab = document.createElement("div");
+    cab.className = "cab";
+    var dia = document.createElement("span");
+    dia.className = "dia";
+    dia.textContent = fechaLarga(c.fecha);
+    var hora = document.createElement("span");
+    hora.className = "hora";
+    hora.textContent = c.hora_inicio + " a " + c.hora_fin + " hs";
+    cab.appendChild(dia);
+    cab.appendChild(hora);
+    caja.appendChild(cab);
+
+    function linea(texto) {
+      var p = document.createElement("div");
+      p.className = "dato";
+      p.textContent = texto;
+      caja.appendChild(p);
+      return p;
+    }
+
+    if (usuario.rol !== "profesional") linea(c.profesional);
+    if (c.paciente_nombre) linea("Paciente: " + c.paciente_nombre);
+    linea(plata(c.monto) + " · alias " + c.alias);
+
+    var est = document.createElement("div");
+    est.style.marginTop = "8px";
+    var tag = document.createElement("span");
+    tag.className = "tag" + (c.estado === "cancelada" ? " no" : "");
+    tag.textContent = c.estado === "cancelada" ? "Cancelada" : "Activa";
+    est.appendChild(tag);
+    caja.appendChild(est);
+
+    if (c.estado !== "cancelada") {
+      var acc = document.createElement("div");
+      acc.className = "acc";
+
+      var bCopiar = document.createElement("button");
+      bCopiar.className = "sec";
+      bCopiar.type = "button";
+      bCopiar.textContent = "Copiar link";
+      bCopiar.addEventListener("click", function () { copiar(c.link, bCopiar); });
+      acc.appendChild(bCopiar);
+
+      var bWhats = document.createElement("button");
+      bWhats.className = "sec";
+      bWhats.type = "button";
+      bWhats.textContent = "WhatsApp";
+      bWhats.addEventListener("click", function () { abrirWhatsApp(c); });
+      acc.appendChild(bWhats);
+
+      if (c.meet_url) {
+        var bMeet = document.createElement("button");
+        bMeet.className = "sec";
+        bMeet.type = "button";
+        bMeet.textContent = "Entrar al Meet";
+        bMeet.addEventListener("click", function () {
+          window.open(c.meet_url, "_blank", "noopener");
+        });
+        acc.appendChild(bMeet);
+      }
+
+      if (usuario.rol === "profesional") {
+        var bCancel = document.createElement("button");
+        bCancel.className = "sec";
+        bCancel.type = "button";
+        bCancel.textContent = "Cancelar";
+        bCancel.addEventListener("click", async function () {
+          if (!window.confirm("¿Cancelar la videoconsulta de " + fechaLarga(c.fecha) + " a las " + c.hora_inicio + " hs? Se borra el Meet del calendario.")) return;
+          bCancel.disabled = true;
+          try {
+            await pedir("cancelar", { id: c.id });
+            aviso("msgLista", "Videoconsulta cancelada.", "ok");
+            cargarLista();
+          } catch (e) {
+            bCancel.disabled = false;
+            aviso("msgLista", e.message, "err");
+          }
+        });
+        acc.appendChild(bCancel);
+      }
+
+      caja.appendChild(acc);
+    }
+
+    return caja;
+  }
+
+  async function cargarLista() {
+    var cont = $("lista");
+    cont.innerHTML = '<p class="carg">Cargando…</p>';
+    try {
+      var r = await pedir("listar", desde === "todas" ? { desde: "todas" } : {});
+      cont.innerHTML = "";
+      if (!r.consultas || !r.consultas.length) {
+        var p = document.createElement("p");
+        p.className = "vacio";
+        p.textContent = desde === "todas"
+          ? "Todavía no hay videoconsultas cargadas."
+          : "No hay videoconsultas de esta semana en adelante.";
+        cont.appendChild(p);
+        return;
+      }
+      r.consultas.forEach(function (c) { cont.appendChild(pintarConsulta(c)); });
+    } catch (e) {
+      cont.innerHTML = "";
+      aviso("msgLista", e.message, "err");
+    }
+  }
+
+  // --- eventos ---------------------------------------------------------
+
+  $("formLogin").addEventListener("submit", async function (ev) {
+    ev.preventDefault();
+    aviso("msgLogin", "");
+    ocupado("btnEntrar", "Entrando…");
+    try {
+      var r = await pedir("login", { pin: $("pin").value });
+      guardarSesion(r.token);
+      $("pin").value = "";
+      entrar(r.usuario);
+    } catch (e) {
+      aviso("msgLogin", e.message, "err");
+    } finally {
+      ocupado("btnEntrar");
+    }
+  });
+
+  $("btnSalir").addEventListener("click", async function () {
+    var t = sesion;
+    cerrarSesion();
+    try {
+      sesion = t;
+      await pedir("salir", {});
+    } catch (e) {} finally { sesion = null; }
+  });
+
+  $("horaInicio").addEventListener("change", function () {
+    var ini = $("horaInicio").value;
+    var fin = $("horaFin").value;
+    if (!ini) return;
+    if (!fin || fin <= ini) {
+      var m = Number(ini.slice(0, 2)) * 60 + Number(ini.slice(3, 5)) + 30;
+      if (m > 23 * 60 + 59) m = 23 * 60 + 59;
+      var hh = String(Math.floor(m / 60)).padStart(2, "0");
+      var mm = String(m % 60).padStart(2, "0");
+      $("horaFin").value = hh + ":" + mm;
+    }
+  });
+
+  $("formCrear").addEventListener("submit", async function (ev) {
+    ev.preventDefault();
+    aviso("msgCrear", "");
+    $("cajaNueva").classList.add("oculto");
+
+    var fecha = $("fecha").value;
+    var ini = $("horaInicio").value;
+    var fin = $("horaFin").value;
+
+    if (fecha < hoyArg()) { aviso("msgCrear", "Esa fecha ya pasó.", "err"); return; }
+    var dur = (Number(fin.slice(0, 2)) * 60 + Number(fin.slice(3, 5))) - (Number(ini.slice(0, 2)) * 60 + Number(ini.slice(3, 5)));
+    if (dur <= 0) { aviso("msgCrear", "La hora de fin tiene que ser posterior a la de inicio.", "err"); return; }
+    if (dur > 240) { aviso("msgCrear", "La videoconsulta no puede durar más de 4 horas.", "err"); return; }
+
+    ocupado("btnCrear", "Creando el Meet…");
+    try {
+      var r = await pedir("crear", {
+        fecha: fecha,
+        hora_inicio: ini,
+        hora_fin: fin,
+        paciente_nombre: $("paciente").value,
+        alias: $("alias").value,
+        alias_titular: $("aliasTitular").value,
+        monto: Number($("monto").value)
+      });
+
+      var c = r.consulta;
+      $("linkNueva").textContent = c.link;
+      $("btnCopiarNueva").onclick = function () { copiar(c.link, $("btnCopiarNueva")); };
+      $("btnWhatsNueva").onclick = function () { abrirWhatsApp(c); };
+      $("cajaNueva").classList.remove("oculto");
+      $("paciente").value = "";
+      cargarLista();
+      $("cajaNueva").scrollIntoView({ behavior: "smooth", block: "center" });
+    } catch (e) {
+      aviso("msgCrear", e.message, "err");
+    } finally {
+      ocupado("btnCrear");
+    }
+  });
+
+  $("formPerfil").addEventListener("submit", async function (ev) {
+    ev.preventDefault();
+    aviso("msgPerfil", "");
+    ocupado("btnPerfil", "Guardando…");
+    try {
+      var r = await pedir("perfil", {
+        alias: $("pAlias").value,
+        alias_titular: $("pTitular").value,
+        monto: Number($("pMonto").value)
+      });
+      usuario = r.usuario;
+      $("alias").value = usuario.alias || "";
+      $("aliasTitular").value = usuario.alias_titular || "";
+      $("monto").value = (usuario.monto === null || usuario.monto === undefined) ? "" : Number(usuario.monto);
+      aviso("msgPerfil", "Listo, guardamos tus datos de cobro.", "ok");
+    } catch (e) {
+      aviso("msgPerfil", e.message, "err");
+    } finally {
+      ocupado("btnPerfil");
+    }
+  });
+
+  [$("btnProximas"), $("btnTodas")].forEach(function (b) {
+    b.addEventListener("click", function () {
+      desde = b.dataset.desde;
+      $("btnProximas").classList.toggle("on", desde === "proximas");
+      $("btnTodas").classList.toggle("on", desde === "todas");
+      aviso("msgLista", "");
+      cargarLista();
+    });
+  });
+
+  // --- arranque --------------------------------------------------------
+
+  (async function () {
+    var guardada = null;
+    try { guardada = localStorage.getItem(LLAVE_SESION); } catch (e) {}
+    if (!guardada) return;
+    sesion = guardada;
+    try {
+      var r = await pedir("yo", {});
+      entrar(r.usuario);
+    } catch (e) {
+      // pedir() ya limpio la sesion si vencio.
+      sesion = null;
+    }
+  })();
+})();
+</script>
+</body>
+</html>
