@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Consultorios Serranos · Solicitud de turno</title>
+<style>
+  :root{--bg:#f4f7f5;--card:#fff;--ink:#1d2b24;--mut:#5c6b63;--acc:#1f7a5a;--line:#d5dfd9}
+  @media (prefers-color-scheme:dark){:root{--bg:#121a16;--card:#1b2620;--ink:#e8f0ec;--mut:#9fb0a7;--acc:#3fb88c;--line:#2c3a33}}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 system-ui,sans-serif}
+  main{max-width:560px;margin:0 auto;padding:20px 16px 40px}
+  h1{font-size:1.4rem;margin:.2em 0}
+  p.sub{color:var(--mut);margin-top:0}
+  form{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px}
+  label{display:block;font-weight:600;margin:14px 0 4px}
+  input,select,textarea{width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;background:transparent;color:inherit;font:inherit}
+  textarea{min-height:80px}
+  .chk{display:flex;flex-wrap:wrap;gap:8px 14px}
+  .chk label{font-weight:400;margin:0;display:flex;gap:6px;align-items:center}
+  .chk input{width:auto}
+  button{margin-top:18px;width:100%;padding:13px;border:0;border-radius:10px;background:var(--acc);color:#fff;font:600 1rem system-ui;cursor:pointer}
+  small{color:var(--mut);display:block;margin-top:10px}
+</style>
+</head>
+<body>
+<main>
+  <h1>Consultorios Serranos</h1>
+  <p class="sub">Policlínica Serrano · Sierra de los Padres. Completá tus datos y te confirmamos el turno por WhatsApp.</p>
+  <form id="f">
+    <label for="nombre">Nombre y apellido *</label>
+    <input id="nombre" required autocomplete="name">
+
+    <label for="tel">Teléfono de contacto *</label>
+    <input id="tel" type="tel" required autocomplete="tel">
+
+    <label for="edad">Edad del paciente</label>
+    <input id="edad" inputmode="numeric">
+
+    <label for="esp">Especialidad *</label>
+    <select id="esp" required>
+      <option value="">Elegí una</option>
+      <option>Clínica Médica</option><option>Pediatría</option><option>Cardiología</option>
+      <option>Traumatología</option><option>Kinesiología</option><option>Ginecología / Obstetricia</option>
+      <option>Nutrición</option><option>Gastroenterología</option><option>Oftalmología</option>
+      <option>Imágenes (ecografía / radiografía)</option><option>No sé / consulta general</option>
+    </select>
+
+    <label for="cobertura">Cobertura *</label>
+    <select id="cobertura" required>
+      <option value="">Elegí una</option>
+      <option>Particular</option><option>Con bono / obra social</option>
+    </select>
+
+    <label for="os">Obra social / prepaga (si corresponde)</label>
+    <input id="os">
+
+    <label>Días preferidos</label>
+    <div class="chk" id="dias">
+      <label><input type="checkbox" value="Lun">Lun</label>
+      <label><input type="checkbox" value="Mar">Mar</label>
+      <label><input type="checkbox" value="Mié">Mié</label>
+      <label><input type="checkbox" value="Jue">Jue</label>
+      <label><input type="checkbox" value="Vie">Vie</label>
+    </div>
+
+    <label for="franja">Franja horaria preferida</label>
+    <select id="franja">
+      <option>Indistinto</option><option>Mañana (9 a 13h)</option><option>Tarde (13 a 17h)</option>
+    </select>
+
+    <label for="motivo">Motivo de la consulta (breve)</label>
+    <textarea id="motivo"></textarea>
+
+    <label for="primera">¿Es tu primera consulta con nosotros?</label>
+    <select id="primera"><option>Sí</option><option>No</option></select>
+
+    <button type="submit">Enviar por WhatsApp</button>
+    <small>Al enviar se abre WhatsApp con tus datos listos para mandar. No incluyas información médica sensible más allá de lo necesario.</small>
+  </form>
+</main>
+<script>
+  // Número que recibe las solicitudes (formato internacional, sin + ni espacios).
+  // 54 = Argentina, 9 = móvil, 341 = código de área, 3622332 = número.
+  var DESTINO = "5493413622332";
+  document.getElementById("f").addEventListener("submit", function(e){
+    e.preventDefault();
+    var v = function(id){ return document.getElementById(id).value.trim(); };
+    var dias = Array.prototype.map.call(document.querySelectorAll("#dias input:checked"), function(i){return i.value;}).join(", ") || "Indistinto";
+    var msg = [
+      "*Solicitud de turno · Consultorios Serranos*",
+      "Nombre: " + v("nombre"),
+      "Teléfono: " + v("tel"),
+      "Edad: " + (v("edad") || "-"),
+      "Especialidad: " + v("esp"),
+      "Cobertura: " + v("cobertura") + (v("os") ? " (" + v("os") + ")" : ""),
+      "Días: " + dias,
+      "Franja: " + v("franja"),
+      "Primera consulta: " + v("primera"),
+      "Motivo: " + (v("motivo") || "-")
+    ].join("\n");
+    window.location.href = "https://wa.me/" + DESTINO + "?text=" + encodeURIComponent(msg);
+  });
+</script>
+</body>
+</html>
