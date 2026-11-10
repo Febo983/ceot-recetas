@@ -23,6 +23,29 @@
   button{margin-top:18px;width:100%;padding:13px;border:0;border-radius:10px;background:var(--acc);color:var(--onacc);font:600 1rem Roboto,system-ui;cursor:pointer}
   .dir{color:var(--ink);margin:0 0 14px;font-size:.95rem}
   small{color:var(--mut);display:block;margin-top:10px}
+
+  /* Movimiento y transiciones */
+  @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(255,188,125,.45)}50%{box-shadow:0 0 0 10px rgba(255,188,125,0)}}
+  h1{animation:fadeIn .8s ease both}
+  .dir{animation:fadeUp .6s .1s ease both}
+  .card,form{animation:fadeUp .7s .2s cubic-bezier(.2,.7,.2,1) both}
+  .card + form,.card + .card{animation-delay:.35s}
+  h2{position:relative;padding-left:14px;transition:padding-left .3s ease}
+  h2::before{content:"";position:absolute;left:0;top:.25em;bottom:.25em;width:4px;border-radius:2px;background:var(--acc);transform-origin:top;animation:grow .6s ease both}
+  @keyframes grow{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+  input,select,textarea{transition:border-color .25s ease,box-shadow .25s ease,background-color .25s ease,transform .2s ease}
+  input:hover,select:hover,textarea:hover{border-color:var(--acc)}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--acc);box-shadow:0 0 0 3px rgba(255,188,125,.3);background-color:rgba(0,0,0,.12);transform:translateY(-1px)}
+  .chk label{padding:6px 12px;border:1px solid var(--line);border-radius:999px;cursor:pointer;transition:background-color .2s ease,border-color .2s ease,color .2s ease,transform .15s ease}
+  .chk label:hover{border-color:var(--acc);transform:translateY(-1px)}
+  .chk label:has(input:checked){background:var(--acc);border-color:var(--acc);color:var(--onacc);font-weight:600}
+  .chk input{accent-color:#000}
+  button{transition:transform .15s ease,box-shadow .25s ease,filter .25s ease;animation:pulse 2.6s 1.5s ease-in-out infinite}
+  button:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.35);filter:brightness(1.06)}
+  button:active{transform:translateY(0) scale(.98)}
+  @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
