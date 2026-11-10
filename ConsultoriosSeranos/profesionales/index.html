@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Consultorios Serranos · Profesionales</title>
+<style>
+  :root{--bg:#f4f7f5;--card:#fff;--ink:#1d2b24;--mut:#5c6b63;--acc:#1f7a5a;--line:#d5dfd9}
+  @media (prefers-color-scheme:dark){:root{--bg:#121a16;--card:#1b2620;--ink:#e8f0ec;--mut:#9fb0a7;--acc:#3fb88c;--line:#2c3a33}}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 system-ui,sans-serif}
+  main{max-width:600px;margin:0 auto;padding:20px 16px 40px}
+  h1{font-size:1.4rem;margin:.2em 0}
+  h2{font-size:1.05rem;margin:22px 0 4px;color:var(--acc)}
+  p.sub{color:var(--mut);margin-top:0}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:14px}
+  .card ul{margin:6px 0 0;padding-left:20px}
+  .card li{margin:4px 0}
+  label{display:block;font-weight:600;margin:14px 0 4px}
+  input,select,textarea{width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;background:transparent;color:inherit;font:inherit}
+  textarea{min-height:70px}
+  .chk{display:flex;flex-wrap:wrap;gap:8px 14px}
+  .chk label{font-weight:400;margin:0;display:flex;gap:6px;align-items:center}
+  .chk input{width:auto}
+  button{margin-top:18px;width:100%;padding:13px;border:0;border-radius:10px;background:var(--acc);color:#fff;font:600 1rem system-ui;cursor:pointer}
+  small{color:var(--mut);display:block;margin-top:10px}
+</style>
+</head>
+<body>
+<main>
+  <h1>Consultorios Serranos</h1>
+  <p class="sub">Sierra de los Padres · Consulta a profesionales. Completá lo que puedas y se envía por WhatsApp.</p>
+
+  <div class="card">
+    <strong>Información del proyecto</strong>
+    <ul>
+      <li>Apertura estimada a <b>fines de diciembre 2026</b>. Podés sumarte desde el momento que te resulte oportuno.</li>
+      <li>Esquema de facturación: <b>90% profesional / 10% administración</b> los meses 1–3, y <b>80% / 20%</b> desde el mes 4.</li>
+      <li>Pacientes con bono: se les cobra <b>$15.000</b>. Los bonos los gestiona la secretaria.</li>
+      <li>El proyecto crece de a poco y se van a sumar más profesionales.</li>
+      <li>Para la habilitación te enviamos un formulario sencillo, que se presenta en el Centro Médico.</li>
+      <li>En algunas semanas haremos fotos y videos para promocionar los consultorios, de forma sencilla y con poco de tu tiempo.</li>
+      <li>Idea: Jornada de Salud Comunitaria con charla breve o chequeos gratuitos. Si te sumás, genial.</li>
+      <li>Estamos desarrollando una app para consultas virtuales (siempre <b>particulares</b>). La secretaria te consulta si querés hacerlas y en qué día y horario.</li>
+    </ul>
+  </div>
+
+  <form id="f" class="card">
+    <label for="nombre">Nombre y apellido *</label>
+    <input id="nombre" required autocomplete="name">
+    <label for="esp">Especialidad *</label>
+    <input id="esp" required>
+
+    <h2>1. Disponibilidad</h2>
+    <label>¿Qué días podés atender? (lun–vie)</label>
+    <div class="chk" id="dias">
+      <label><input type="checkbox" value="Lun">Lun</label>
+      <label><input type="checkbox" value="Mar">Mar</label>
+      <label><input type="checkbox" value="Mié">Mié</label>
+      <label><input type="checkbox" value="Jue">Jue</label>
+      <label><input type="checkbox" value="Vie">Vie</label>
+    </div>
+    <label for="franja">Franja</label>
+    <select id="franja">
+      <option>Mañana (9–13h)</option><option>Tarde (13–17h)</option><option>Ambas</option>
+    </select>
+    <label for="flex">¿Tenés flexibilidad para correr el horario hasta las 18 o 19h?</label>
+    <select id="flex"><option>Sí</option><option>No</option><option>Tal vez</option></select>
+    <label for="horas">Horas semanales que querés dedicar</label>
+    <input id="horas" inputmode="numeric">
+    <label for="desde">¿Desde qué fecha te querés sumar?</label>
+    <input id="desde">
+
+    <h2>2. Modalidad de atención</h2>
+    <label for="modal">¿Atendés particular, con bonos/obras sociales o mixto?</label>
+    <select id="modal"><option>Particular</option><option>Con bonos / obras sociales</option><option>Mixto</option></select>
+    <label for="prop">Si es mixto, ¿qué proporción pensás (cupos particular / OOSS)?</label>
+    <input id="prop">
+    <label for="nooss">¿Con qué obras sociales/prepagas NO trabajás hoy?</label>
+    <input id="nooss">
+
+    <h2>3. Económico</h2>
+    <label for="valor">¿Qué valor de consulta particular cobrarías al comienzo?</label>
+    <input id="valor">
+    <label for="pph">¿Cuántos pacientes por hora atendés normalmente?</label>
+    <input id="pph" inputmode="numeric">
+
+    <h2>4. Habilitación y operativa</h2>
+    <label for="seguro">¿Tenés seguro de mala praxis vigente?</label>
+    <select id="seguro"><option>Sí</option><option>No</option></select>
+    <label for="equipo">¿Tenés que habilitar algún equipo propio? (Imágenes / Radiofísica Sanitaria)</label>
+    <input id="equipo">
+    <label for="insumos">¿Qué equipamiento o insumos necesitás en el consultorio?</label>
+    <textarea id="insumos"></textarea>
+    <label for="secre">¿Querés que la secretaria maneje tu agenda, turnos online y WhatsApp Business?</label>
+    <select id="secre"><option>Sí</option><option>No</option></select>
+    <label for="virtual">¿Te interesan las consultas virtuales (particulares)? ¿Qué días y horarios?</label>
+    <input id="virtual">
+    <label for="domi">¿Ofrecés visitas domiciliarias para pacientes con movilidad reducida?</label>
+    <select id="domi"><option>Sí</option><option>No</option><option>A evaluar</option></select>
+    <label for="pacientes">¿Tenés pacientes propios que podrías derivar a Sierra de los Padres?</label>
+    <select id="pacientes"><option>Sí</option><option>No</option></select>
+    <label for="plazo">¿Qué plazo de compromiso te resulta cómodo?</label>
+    <select id="plazo"><option>3 meses</option><option>6 meses</option><option>12 meses</option></select>
+
+    <h2>5. Solo Clínica Médica y Pediatría</h2>
+    <label for="mas">¿Podrías atender más de 1 día por semana? ¿Un día o turno adicional?</label>
+    <input id="mas">
+
+    <button type="submit">Enviar por WhatsApp</button>
+    <small>Se abre WhatsApp con tus respuestas listas para mandar.</small>
+  </form>
+</main>
+<script>
+  var DESTINO = "5493413622332";
+  document.getElementById("f").addEventListener("submit", function(e){
+    e.preventDefault();
+    var v = function(id){ return document.getElementById(id).value.trim() || "-"; };
+    var dias = Array.prototype.map.call(document.querySelectorAll("#dias input:checked"), function(i){return i.value;}).join(", ") || "-";
+    var msg = [
+      "*Consulta a profesionales · Consultorios Serranos*",
+      "Nombre: " + v("nombre"),
+      "Especialidad: " + v("esp"),
+      "",
+      "*Disponibilidad*",
+      "Días: " + dias,
+      "Franja: " + v("franja"),
+      "Flexibilidad hasta 18/19h: " + v("flex"),
+      "Horas semanales: " + v("horas"),
+      "Desde: " + v("desde"),
+      "",
+      "*Modalidad*",
+      "Atención: " + v("modal"),
+      "Proporción: " + v("prop"),
+      "No trabaja con: " + v("nooss"),
+      "",
+      "*Económico*",
+      "Valor consulta particular: " + v("valor"),
+      "Pacientes por hora: " + v("pph"),
+      "",
+      "*Habilitación y operativa*",
+      "Seguro mala praxis: " + v("seguro"),
+      "Equipo propio a habilitar: " + v("equipo"),
+      "Equipamiento/insumos: " + v("insumos"),
+      "Secretaria maneja agenda: " + v("secre"),
+      "Consultas virtuales: " + v("virtual"),
+      "Visitas domiciliarias: " + v("domi"),
+      "Pacientes propios a derivar: " + v("pacientes"),
+      "Plazo de compromiso: " + v("plazo"),
+      "",
+      "*Clínica / Pediatría*",
+      "Más de 1 día por semana: " + v("mas")
+    ].join("\n");
+    window.location.href = "https://wa.me/" + DESTINO + "?text=" + encodeURIComponent(msg);
+  });
+</script>
+</body>
+</html>
