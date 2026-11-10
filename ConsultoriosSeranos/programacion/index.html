@@ -4,13 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Consultorios Serranos · Solicitud de turno</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;600&family=Roboto:wght@400;600&display=swap" rel="stylesheet">
 <style>
-  :root{--bg:#f4f7f5;--card:#fff;--ink:#1d2b24;--mut:#5c6b63;--acc:#1f7a5a;--line:#d5dfd9}
-  @media (prefers-color-scheme:dark){:root{--bg:#121a16;--card:#1b2620;--ink:#e8f0ec;--mut:#9fb0a7;--acc:#3fb88c;--line:#2c3a33}}
+  :root{--bg:#444F55;--card:#525E5C;--ink:#C2BEB6;--mut:#a9ada6;--acc:#FFBC7D;--onacc:#000;--line:#6b7875}
   *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 system-ui,sans-serif}
+  body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 Roboto,system-ui,sans-serif}
   main{max-width:560px;margin:0 auto;padding:20px 16px 40px}
-  h1{font-size:1.4rem;margin:.2em 0}
+  h1{font-family:'Roboto Slab',Georgia,serif;font-size:1.5rem;margin:.2em 0;color:var(--acc)}
   p.sub{color:var(--mut);margin-top:0}
   form{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px}
   label{display:block;font-weight:600;margin:14px 0 4px}
@@ -19,7 +20,8 @@
   .chk{display:flex;flex-wrap:wrap;gap:8px 14px}
   .chk label{font-weight:400;margin:0;display:flex;gap:6px;align-items:center}
   .chk input{width:auto}
-  button{margin-top:18px;width:100%;padding:13px;border:0;border-radius:10px;background:var(--acc);color:#fff;font:600 1rem system-ui;cursor:pointer}
+  button{margin-top:18px;width:100%;padding:13px;border:0;border-radius:10px;background:var(--acc);color:var(--onacc);font:600 1rem Roboto,system-ui;cursor:pointer}
+  .dir{color:var(--ink);margin:0 0 14px;font-size:.95rem}
   small{color:var(--mut);display:block;margin-top:10px}
 </style>
 </head>
@@ -27,6 +29,7 @@
 <main>
   <h1>Consultorios Serranos</h1>
   <p class="sub">Sierra de los Padres. Completá tus datos y te confirmamos el turno por WhatsApp.</p>
+  <p class="dir">📍 Refugio Serrano · C. Padre Luis Varetto 281, Sierra de los Padres<br>Lunes a Viernes de 9 a 17 hs</p>
   <form id="f">
     <label for="nombre">Nombre y apellido *</label>
     <input id="nombre" required autocomplete="name">

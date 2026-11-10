@@ -5,7 +5,7 @@ Hola [nombre]! Estamos armando la grilla de Consultorios Serranos (Sierra de los
 ## Información del proyecto
 - La apertura estimada es a **fines de diciembre 2026**. Podés sumarte desde el momento que te resulte oportuno.
 - Esquema de facturación: **90% profesional / 10% administración los meses 1–3, y 80% / 20% desde el mes 4**.
-- Pacientes con bono: se les cobra **$15.000**.
+- Pacientes con bono: se les cobra **$15.000**. Ese copago es para Administración.
 - Los bonos los gestiona la secretaria.
 - El proyecto está pensado con un crecimiento paulatino, y se van a sumar más profesionales. Vamos a ser ambiciosos.
 - Para la habilitación de los consultorios te vamos a enviar un formulario sencillo, que se presenta en el Centro Médico.
@@ -38,5 +38,5 @@ Hola [nombre]! Estamos armando la grilla de Consultorios Serranos (Sierra de los
 16. ¿Tenés pacientes propios que podrías derivar a Sierra de los Padres?
 17. ¿Qué plazo de compromiso te resulta cómodo (3, 6 o 12 meses)?
 
-## 5. Solo Clínica Médica y Pediatría
+## 5. Días adicionales
 18. ¿Podrías atender más de 1 día por semana? ¿Podés cubrir un día o turno adicional?
