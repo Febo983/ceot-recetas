@@ -48,10 +48,37 @@
   button{transition:transform .15s ease,box-shadow .25s ease,filter .25s ease;animation:pulse 2.6s 1.5s ease-in-out infinite}
   button:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.35);filter:brightness(1.06)}
   button:active{transform:translateY(0) scale(.98)}
+
+  /* Barra de progreso, secciones que se revelan y pantalla de envío */
+  .bar{position:fixed;top:0;left:0;z-index:5;width:100%;height:5px;background:rgba(0,0,0,.28)}
+  .bar i{display:block;height:100%;width:0;border-radius:0 3px 3px 0;background:linear-gradient(90deg,#FFBC7D,#ffe3c4);box-shadow:0 0 12px rgba(255,188,125,.85);transition:width .6s cubic-bezier(.2,.7,.2,1)}
+  .js .sec{opacity:0;transform:translateY(28px) scale(.97);filter:blur(5px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.2,1),filter .7s ease}
+  .js .sec.in{opacity:1;transform:none;filter:none}
+  .js .sec h2::before{animation:none;transform:scaleY(0);transition:transform .6s .25s ease}
+  .js .sec.in h2::before{transform:scaleY(1)}
+  h2::after{content:"✓";display:inline-block;margin-left:8px;opacity:0;transform:scale(0) rotate(-90deg);transition:opacity .3s ease,transform .45s cubic-bezier(.3,1.6,.5,1)}
+  .sec.done h2::after{opacity:1;transform:none}
+  .ok{position:fixed;inset:0;z-index:10;display:grid;place-items:center;text-align:center;padding:24px;background:var(--bg);opacity:0;visibility:hidden;transition:opacity .4s ease,visibility .4s}
+  .ok.on{opacity:1;visibility:visible}
+  .ok svg{width:96px;height:96px;fill:none;stroke:var(--acc);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+  .ok circle{stroke-dasharray:152;stroke-dashoffset:152}
+  .ok path{stroke-dasharray:40;stroke-dashoffset:40}
+  .ok.on circle{animation:draw .7s .15s ease forwards}
+  .ok.on path{animation:draw .45s .75s ease forwards}
+  @keyframes draw{to{stroke-dashoffset:0}}
+  .ok p{font:600 1.5rem 'Roboto Slab',Georgia,serif;color:var(--acc);margin:18px 0 4px}
+  .ok span{color:var(--mut)}
+  .ok.on p,.ok.on span{animation:fadeUp .6s 1s ease both}
+  @media (prefers-reduced-motion:reduce){.ok circle,.ok path{stroke-dashoffset:0}}
   @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
+<div class="bar" aria-hidden="true"><i id="prog"></i></div>
+<div class="ok" id="ok" role="status"><div>
+  <svg viewBox="0 0 52 52" aria-hidden="true"><circle cx="26" cy="26" r="24"/><path d="M15 27l8 8 15-17"/></svg>
+  <p id="okt">¡Gracias!</p><span>Abriendo WhatsApp…</span>
+</div></div>
 <main>
   <h1>Consultorios Serranos</h1>
   <p class="dir">📍 Refugio Serrano · C. Padre Luis Varetto 281, Sierra de los Padres<br>Lunes a Viernes de 9 a 17 hs</p>
@@ -63,8 +90,8 @@
       <li>Esquema de facturación: <b>90% profesional / 10% administración</b> los meses 1–3, y <b>80% / 20%</b> desde el mes 4.</li>
       <li>Pacientes con bono: se les cobra <b>$15.000</b>. Ese copago es para <b>Administración</b>. Los bonos los gestiona la secretaria.</li>
       <li>El proyecto crece de a poco y se van a sumar más profesionales.</li>
-      <li>Para la habilitación te enviamos un formulario sencillo, que se presenta en el Centro Médico.</li>
-      <li>En algunas semanas haremos fotos y videos para promocionar los consultorios, de forma sencilla y con poco de tu tiempo.</li>
+      <li>Para la habilitación te enviamos un formulario simple, que se presenta en el Centro Médico.</li>
+      <li>En algunas semanas haremos fotos y videos para promocionar los consultorios, de forma ágil y con poco de tu tiempo.</li>
       <li>Idea: Jornada de Salud Comunitaria con charla breve o chequeos gratuitos. Si te sumás, genial.</li>
       <li>Estamos desarrollando una app para consultas virtuales (siempre <b>particulares</b>). La secretaria te consulta si querés hacerlas y en qué día y horario.</li>
     </ul>
@@ -76,6 +103,7 @@
     <label for="esp">Especialidad *</label>
     <input id="esp" required>
 
+    <section class="sec">
     <h2>1. Disponibilidad</h2>
     <label>¿Qué días podés atender? (lun–vie)</label>
     <div class="chk" id="dias">
@@ -96,6 +124,8 @@
     <label for="desde">¿Desde qué fecha te querés sumar?</label>
     <input id="desde">
 
+    </section>
+    <section class="sec">
     <h2>2. Modalidad de atención</h2>
     <label for="modal">¿Atendés particular, con bonos/obras sociales o mixto?</label>
     <select id="modal"><option>Particular</option><option>Con bonos / obras sociales</option><option>Mixto</option></select>
@@ -104,12 +134,16 @@
     <label for="nooss">¿Con qué obras sociales/prepagas NO trabajás hoy?</label>
     <input id="nooss">
 
+    </section>
+    <section class="sec">
     <h2>3. Económico</h2>
     <label for="valor">¿Qué valor de consulta particular cobrarías al comienzo?</label>
     <input id="valor">
     <label for="pph">¿Cuántos pacientes por hora atendés normalmente?</label>
     <input id="pph" inputmode="numeric">
 
+    </section>
+    <section class="sec">
     <h2>4. Habilitación y operativa</h2>
     <label for="seguro">¿Tenés seguro de mala praxis vigente?</label>
     <select id="seguro"><option>Sí</option><option>No</option></select>
@@ -117,8 +151,6 @@
     <input id="equipo">
     <label for="insumos">¿Qué equipamiento o insumos necesitás en el consultorio?</label>
     <textarea id="insumos"></textarea>
-    <label for="secre">¿Querés que la secretaria maneje tu agenda, turnos online y WhatsApp Business?</label>
-    <select id="secre"><option>Sí</option><option>No</option></select>
     <label for="virtual">¿Te interesan las consultas virtuales (particulares)? ¿Qué días y horarios?</label>
     <input id="virtual">
     <label for="domi">¿Ofrecés visitas domiciliarias para pacientes con movilidad reducida?</label>
@@ -128,9 +160,13 @@
     <label for="plazo">¿Qué plazo de compromiso te resulta cómodo?</label>
     <select id="plazo"><option>3 meses</option><option>6 meses</option><option>12 meses</option></select>
 
+    </section>
+    <section class="sec">
     <h2>5. Días adicionales</h2>
     <label for="mas">¿Podrías atender más de 1 día por semana? ¿Un día o turno adicional?</label>
     <input id="mas">
+
+    </section>
 
     <button type="submit">Enviar por WhatsApp</button>
     <small>Se abre WhatsApp con tus respuestas listas para mandar.</small>
@@ -167,7 +203,6 @@
       "Seguro mala praxis: " + v("seguro"),
       "Equipo propio a habilitar: " + v("equipo"),
       "Equipamiento/insumos: " + v("insumos"),
-      "Secretaria maneja agenda: " + v("secre"),
       "Consultas virtuales: " + v("virtual"),
       "Visitas domiciliarias: " + v("domi"),
       "Pacientes propios a derivar: " + v("pacientes"),
@@ -176,8 +211,46 @@
       "*Días adicionales*",
       "Más de 1 día por semana: " + v("mas")
     ].join("\n");
-    window.location.href = "https://wa.me/" + DESTINO + "?text=" + encodeURIComponent(msg);
+    var url = "https://wa.me/" + DESTINO + "?text=" + encodeURIComponent(msg);
+    var nom = v("nombre").split(" ")[0];
+    document.getElementById("okt").textContent = "¡Gracias, " + nom + "!";
+    document.getElementById("ok").classList.add("on");
+    var lento = window.matchMedia("(prefers-reduced-motion:reduce)").matches;
+    setTimeout(function(){ window.location.href = url; }, lento ? 600 : 1900);
   });
+  window.addEventListener("pageshow", function(){ document.getElementById("ok").classList.remove("on"); });
+
+  // Secciones que aparecen al llegar a ellas
+  document.documentElement.classList.add("js");
+  var secs = document.querySelectorAll(".sec");
+  if ("IntersectionObserver" in window) {
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(x){ if (x.isIntersecting) { x.target.classList.add("in"); io.unobserve(x.target); } });
+    }, {threshold: .15});
+    secs.forEach(function(s){ io.observe(s); });
+  } else {
+    secs.forEach(function(s){ s.classList.add("in"); });
+  }
+
+  // Barra de progreso y tilde por sección completa
+  var form = document.getElementById("f");
+  function lleno(el){ return el.value.trim() !== ""; }
+  function avance(){
+    var campos = form.querySelectorAll("input:not([type=checkbox]),textarea");
+    var total = campos.length + 1, ok = 0;
+    campos.forEach(function(c){ if (lleno(c)) ok++; });
+    if (form.querySelector("#dias input:checked")) ok++;
+    document.getElementById("prog").style.width = Math.round(ok / total * 100) + "%";
+    secs.forEach(function(s){
+      var cs = s.querySelectorAll("input:not([type=checkbox]),textarea"), listo = true;
+      cs.forEach(function(c){ if (!lleno(c)) listo = false; });
+      if (s.querySelector("#dias") && !s.querySelector("#dias input:checked")) listo = false;
+      s.classList.toggle("done", listo);
+    });
+  }
+  form.addEventListener("input", avance);
+  form.addEventListener("change", avance);
+  avance();
 </script>
 </body>
 </html>
