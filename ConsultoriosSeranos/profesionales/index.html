@@ -35,9 +35,29 @@
   .dir{animation:fadeUp .6s .1s ease both}
   .card,form{animation:fadeUp .7s .2s cubic-bezier(.2,.7,.2,1) both}
   .card + form,.card + .card{animation-delay:.35s}
-  h2{position:relative;padding-left:14px;transition:padding-left .3s ease}
-  h2::before{content:"";position:absolute;left:0;top:.25em;bottom:.25em;width:4px;border-radius:2px;background:var(--acc);transform-origin:top;animation:grow .6s ease both}
-  @keyframes grow{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+  h2{display:flex;align-items:center;gap:10px;margin-top:30px;padding-top:18px;border-top:1px solid var(--line)}
+  h2 .n{flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--acc);color:var(--onacc);font:600 .95rem Roboto,system-ui,sans-serif}
+
+  /* Barra de progreso de la encuesta */
+  #prog{position:fixed;inset:0 0 auto 0;height:5px;z-index:10;background:rgba(0,0,0,.25)}
+  #prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,#ff9d5c,var(--acc),#ffe0bd);border-radius:0 4px 4px 0;box-shadow:0 0 12px rgba(255,188,125,.8);transition:width .25s ease-out}
+
+  /* Aparición escalonada al hacer scroll (solo con JS activo) */
+  .js #f > *{opacity:0;transform:translateX(-18px);transition:opacity .55s ease,transform .55s cubic-bezier(.2,.7,.2,1)}
+  .js #f > h2{transform:translateX(0) scale(.96)}
+  .js #f > .in{opacity:1;transform:none}
+  .js #f > h2 .n{transform:scale(0) rotate(-90deg);transition:transform .6s .15s cubic-bezier(.3,1.6,.5,1)}
+  .js #f > h2.in .n{transform:none}
+
+  /* Pantalla de envío */
+  #ok{position:fixed;inset:0;z-index:20;display:grid;place-content:center;justify-items:center;gap:14px;background:var(--bg);color:var(--acc);font:600 1.15rem 'Roboto Slab',Georgia,serif;text-align:center;padding:24px;clip-path:circle(0 at 50% 85%);visibility:hidden;transition:clip-path .7s cubic-bezier(.6,0,.2,1),visibility 0s .7s}
+  #ok.on{clip-path:circle(150% at 50% 85%);visibility:visible;transition:clip-path .7s cubic-bezier(.6,0,.2,1)}
+  #ok svg{width:84px;height:84px;fill:none;stroke:var(--acc);stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
+  #ok circle{stroke-dasharray:240;stroke-dashoffset:240}
+  #ok path{stroke-dasharray:60;stroke-dashoffset:60}
+  #ok.on circle{animation:draw .7s .35s ease forwards}
+  #ok.on path{animation:draw .4s .9s ease forwards}
+  @keyframes draw{to{stroke-dashoffset:0}}
   input,select,textarea{transition:border-color .25s ease,box-shadow .25s ease,background-color .25s ease,transform .2s ease}
   input:hover,select:hover,textarea:hover{border-color:var(--acc)}
   input:focus,select:focus,textarea:focus{outline:none;border-color:var(--acc);box-shadow:0 0 0 3px rgba(255,188,125,.3);background-color:rgba(0,0,0,.12);transform:translateY(-1px)}
@@ -48,10 +68,12 @@
   button{transition:transform .15s ease,box-shadow .25s ease,filter .25s ease;animation:pulse 2.6s 1.5s ease-in-out infinite}
   button:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.35);filter:brightness(1.06)}
   button:active{transform:translateY(0) scale(.98)}
-  @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+  @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.js #f > *,.js #f > h2 .n{opacity:1;transform:none}#ok circle,#ok path{stroke-dashoffset:0}}
 </style>
 </head>
 <body>
+<div id="prog" aria-hidden="true"><i></i></div>
+<div id="ok" aria-hidden="true"><svg viewBox="0 0 84 84"><circle cx="42" cy="42" r="38"/><path d="M26 43l11 11 21-23"/></svg><span>¡Gracias! Abriendo WhatsApp…</span></div>
 <main>
   <h1>Consultorios Serranos</h1>
   <p class="dir">📍 Refugio Serrano · C. Padre Luis Varetto 281, Sierra de los Padres<br>Lunes a Viernes de 9 a 17 hs</p>
@@ -59,12 +81,12 @@
   <div class="card">
     <strong>Información del proyecto</strong>
     <ul>
-      <li>Apertura estimada a <b>fines de diciembre 2026</b>. Podés sumarte desde el momento que te resulte oportuno.</li>
+      <li>Apertura estimada <b>Enero 2027</b>. Podés sumarte desde el momento que te resulte oportuno.</li>
       <li>Esquema de facturación: <b>90% profesional / 10% administración</b> los meses 1–3, y <b>80% / 20%</b> desde el mes 4.</li>
       <li>Pacientes con bono: se les cobra <b>$15.000</b>. Ese copago es para <b>Administración</b>. Los bonos los gestiona la secretaria.</li>
       <li>El proyecto crece de a poco y se van a sumar más profesionales.</li>
       <li>Para la habilitación te enviamos un formulario sencillo, que se presenta en el Centro Médico.</li>
-      <li>En algunas semanas haremos fotos y videos para promocionar los consultorios, de forma sencilla y con poco de tu tiempo.</li>
+      <li>En algunas semanas haremos fotos y videos para promocionar los consultorios, de manera sencilla con poca demanda de tu tiempo.</li>
       <li>Idea: Jornada de Salud Comunitaria con charla breve o chequeos gratuitos. Si te sumás, genial.</li>
       <li>Estamos desarrollando una app para consultas virtuales (siempre <b>particulares</b>). La secretaria te consulta si querés hacerlas y en qué día y horario.</li>
     </ul>
@@ -76,7 +98,7 @@
     <label for="esp">Especialidad *</label>
     <input id="esp" required>
 
-    <h2>1. Disponibilidad</h2>
+    <h2><span class="n">1</span>Disponibilidad</h2>
     <label>¿Qué días podés atender? (lun–vie)</label>
     <div class="chk" id="dias">
       <label><input type="checkbox" value="Lun">Lun</label>
@@ -96,7 +118,7 @@
     <label for="desde">¿Desde qué fecha te querés sumar?</label>
     <input id="desde">
 
-    <h2>2. Modalidad de atención</h2>
+    <h2><span class="n">2</span>Modalidad de atención</h2>
     <label for="modal">¿Atendés particular, con bonos/obras sociales o mixto?</label>
     <select id="modal"><option>Particular</option><option>Con bonos / obras sociales</option><option>Mixto</option></select>
     <label for="prop">Si es mixto, ¿qué proporción pensás (cupos particular / OOSS)?</label>
@@ -104,21 +126,19 @@
     <label for="nooss">¿Con qué obras sociales/prepagas NO trabajás hoy?</label>
     <input id="nooss">
 
-    <h2>3. Económico</h2>
+    <h2><span class="n">3</span>Económico</h2>
     <label for="valor">¿Qué valor de consulta particular cobrarías al comienzo?</label>
     <input id="valor">
-    <label for="pph">¿Cuántos pacientes por hora atendés normalmente?</label>
+    <label for="pph">¿Cuántos pacientes por hora podrías atender?</label>
     <input id="pph" inputmode="numeric">
 
-    <h2>4. Habilitación y operativa</h2>
+    <h2><span class="n">4</span>Habilitación y operativa</h2>
     <label for="seguro">¿Tenés seguro de mala praxis vigente?</label>
     <select id="seguro"><option>Sí</option><option>No</option></select>
     <label for="equipo">¿Tenés que habilitar algún equipo propio? (Imágenes / Radiofísica Sanitaria)</label>
     <input id="equipo">
     <label for="insumos">¿Qué equipamiento o insumos necesitás en el consultorio?</label>
     <textarea id="insumos"></textarea>
-    <label for="secre">¿Querés que la secretaria maneje tu agenda, turnos online y WhatsApp Business?</label>
-    <select id="secre"><option>Sí</option><option>No</option></select>
     <label for="virtual">¿Te interesan las consultas virtuales (particulares)? ¿Qué días y horarios?</label>
     <input id="virtual">
     <label for="domi">¿Ofrecés visitas domiciliarias para pacientes con movilidad reducida?</label>
@@ -128,7 +148,7 @@
     <label for="plazo">¿Qué plazo de compromiso te resulta cómodo?</label>
     <select id="plazo"><option>3 meses</option><option>6 meses</option><option>12 meses</option></select>
 
-    <h2>5. Días adicionales</h2>
+    <h2><span class="n">5</span>Días adicionales</h2>
     <label for="mas">¿Podrías atender más de 1 día por semana? ¿Un día o turno adicional?</label>
     <input id="mas">
 
@@ -167,7 +187,6 @@
       "Seguro mala praxis: " + v("seguro"),
       "Equipo propio a habilitar: " + v("equipo"),
       "Equipamiento/insumos: " + v("insumos"),
-      "Secretaria maneja agenda: " + v("secre"),
       "Consultas virtuales: " + v("virtual"),
       "Visitas domiciliarias: " + v("domi"),
       "Pacientes propios a derivar: " + v("pacientes"),
@@ -176,8 +195,33 @@
       "*Días adicionales*",
       "Más de 1 día por semana: " + v("mas")
     ].join("\n");
-    window.location.href = "https://wa.me/" + DESTINO + "?text=" + encodeURIComponent(msg);
+    var url = "https://wa.me/" + DESTINO + "?text=" + encodeURIComponent(msg);
+    var ok = document.getElementById("ok");
+    ok.classList.add("on");
+    setTimeout(function(){ window.location.href = url; }, 1500);
+    setTimeout(function(){ ok.classList.remove("on"); }, 4000);
   });
+
+  // Barra de progreso según el avance en la página
+  var bar = document.querySelector("#prog i");
+  function avance(){
+    var d = document.documentElement, max = d.scrollHeight - d.clientHeight;
+    bar.style.width = (max > 0 ? Math.min(100, d.scrollTop / max * 100) : 100) + "%";
+  }
+  addEventListener("scroll", avance, {passive:true});
+  addEventListener("resize", avance);
+  avance();
+
+  // Aparición de cada pregunta al entrar en pantalla
+  if ("IntersectionObserver" in window) {
+    document.documentElement.classList.add("js");
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(en){
+        if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); }
+      });
+    });
+    Array.prototype.forEach.call(document.getElementById("f").children, function(el){ io.observe(el); });
+  }
 </script>
 </body>
 </html>
